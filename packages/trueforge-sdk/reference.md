@@ -1,10 +1,10 @@
-# 参考文档
+# Reference
 ## Agents
 <details><summary><code>client.agents.<a href="/src/api/resources/agents/client/Client.ts">list</a>() -> TrueForge.ListAgentsResponse</code></summary>
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -12,13 +12,13 @@
 <dl>
 <dd>
 
-该租户所有已配置的 Agent。
+All configured agents for the tenant.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -35,7 +35,7 @@ await client.agents.list();
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -59,7 +59,7 @@ await client.agents.list();
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -67,13 +67,13 @@ await client.agents.list();
 <dl>
 <dd>
 
-创建一个 Agent 并分配一个不可变的 ID。如果 `name` 已被占用则失败。`name` 之后无法更改。
+Creates an agent and allocates an immutable id. Fails if `name` is already taken. Name cannot be changed later.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -97,7 +97,7 @@ await client.agents.create({
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -129,7 +129,7 @@ await client.agents.create({
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -137,13 +137,13 @@ await client.agents.create({
 <dl>
 <dd>
 
-通过不可变 ID 获取已配置的 Agent。
+Fetch a configured agent by immutable id.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -160,7 +160,7 @@ await client.agents.get("agent_id");
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -168,7 +168,7 @@ await client.agents.get("agent_id");
 <dl>
 <dd>
 
-**agent_id:** `string` — 不可变的 Agent 标识符。
+**agent_id:** `string` — Immutable agent identifier.
     
 </dd>
 </dl>
@@ -192,7 +192,7 @@ await client.agents.get("agent_id");
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -200,13 +200,13 @@ await client.agents.get("agent_id");
 <dl>
 <dd>
 
-替换以不可变 `agent_id` 为键的现有 Agent 的 manifest。
+Replaces the manifest for an existing agent keyed by immutable `agent_id`.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -229,7 +229,7 @@ await client.agents.update("agent_id", {
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -237,7 +237,7 @@ await client.agents.update("agent_id", {
 <dl>
 <dd>
 
-**agent_id:** `string` — 不可变的 Agent 标识符。
+**agent_id:** `string` — Immutable agent identifier.
     
 </dd>
 </dl>
@@ -269,7 +269,7 @@ await client.agents.update("agent_id", {
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -277,13 +277,13 @@ await client.agents.update("agent_id", {
 <dl>
 <dd>
 
-通过不可变 ID 删除已配置的 Agent。如果已删除则幂等。
+Delete a configured agent by immutable id. Idempotent if already gone.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -300,7 +300,7 @@ await client.agents.delete("agent_id");
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -308,7 +308,7 @@ await client.agents.delete("agent_id");
 <dl>
 <dd>
 
-**agent_id:** `string` — 不可变的 Agent 标识符。
+**agent_id:** `string` — Immutable agent identifier.
     
 </dd>
 </dl>
@@ -333,7 +333,7 @@ await client.agents.delete("agent_id");
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -341,13 +341,13 @@ await client.agents.delete("agent_id");
 <dl>
 <dd>
 
-返回已认证的调用者身份（`type`、`tenant_id`、`subject`、`roles`），包装为 `{ data }`。当启用浏览器 OIDC 时，`type` 为 `oidc-connected`，否则为 `default`。启用认证时，此操作需要有效的 `id_token` cookie 或 `Authorization: Bearer` 令牌（否则返回 401）。禁用认证时，返回独立的默认身份。
+Returns the authenticated caller identity (`type`, `tenant_id`, `subject`, `roles`) wrapped as `{ data }`. `type` is `oidc-connected` when browser OIDC is enabled, otherwise `default`. When auth is enabled this requires a valid `id_token` cookie or `Authorization: Bearer` token (401 otherwise). When auth is disabled, returns the standalone default identity.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -364,7 +364,7 @@ await client.auth.me();
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -389,7 +389,7 @@ await client.auth.me();
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -397,13 +397,13 @@ await client.auth.me();
 <dl>
 <dd>
 
-报告该租户可用的可选运行时能力。
+Report optional runtime capabilities available for this tenant.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -420,7 +420,7 @@ await client.server.getCapabilities();
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -440,12 +440,12 @@ await client.server.getCapabilities();
 </dl>
 </details>
 
-## MCP 服务器
+## MCP Servers
 <details><summary><code>client.mcpServers.<a href="/src/api/resources/mcpServers/client/Client.ts">list</a>() -> TrueForge.ListAvailableMcpServersResponse</code></summary>
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -453,13 +453,13 @@ await client.server.getCapabilities();
 <dl>
 <dd>
 
-以精简的名称/URL 列表形式返回 MCP 服务器，供 composer 使用。不包含 auth 或 auth_status。
+MCP servers as a slim name/url list for the composer. No auth or auth_status.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -476,7 +476,7 @@ await client.mcpServers.list();
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -500,7 +500,7 @@ await client.mcpServers.list();
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -508,13 +508,13 @@ await client.mcpServers.list();
 <dl>
 <dd>
 
-返回 MCP 服务器当前的认证状态。对于 OAuth（`auth.type` 为 dcr），当存在可用令牌时返回 authenticated；否则返回 auth_required 并附带授权 URL。可选的 return_to 参数指定 OAuth 回调将浏览器重定向到的位置；未提供时，回调返回 JSON。
+Returns the current auth status for the MCP server. For OAuth (`auth.type` dcr), returns authenticated when a usable token exists; otherwise returns auth_required with an authorization URL. Optional return_to is where the OAuth callback redirects the browser; without it the callback returns JSON.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -531,7 +531,7 @@ await client.mcpServers.authorize("name");
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -539,7 +539,7 @@ await client.mcpServers.authorize("name");
 <dl>
 <dd>
 
-**name:** `string` — MCP 服务器名称。
+**name:** `string` — MCP server name.
     
 </dd>
 </dl>
@@ -571,7 +571,7 @@ await client.mcpServers.authorize("name");
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -579,13 +579,13 @@ await client.mcpServers.authorize("name");
 <dl>
 <dd>
 
-在适用时断开 MCP 服务器的 OAuth 连接，并返回更新后的服务器及其 auth_status。当服务器不使用存储的 OAuth 令牌时，此操作不执行任何操作。
+Disconnects OAuth for the MCP server when applicable and returns the updated server with auth_status. No-op when the server does not use stored OAuth tokens.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -602,7 +602,7 @@ await client.mcpServers.deleteAuthorization("name");
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -610,7 +610,7 @@ await client.mcpServers.deleteAuthorization("name");
 <dl>
 <dd>
 
-**name:** `string` — MCP 服务器名称。
+**name:** `string` — MCP server name.
     
 </dd>
 </dl>
@@ -634,7 +634,7 @@ await client.mcpServers.deleteAuthorization("name");
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -642,13 +642,13 @@ await client.mcpServers.deleteAuthorization("name");
 <dl>
 <dd>
 
-给定 MCP 服务器暴露的所有工具（不分页），由 MCP `tools/list` 调用返回。
+All tools exposed by the given MCP server (non-paginated), as returned by the MCP `tools/list` call.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -665,7 +665,7 @@ await client.mcpServers.listTools("name");
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -673,7 +673,7 @@ await client.mcpServers.listTools("name");
 <dl>
 <dd>
 
-**name:** `string` — MCP 服务器名称。
+**name:** `string` — MCP server name.
     
 </dd>
 </dl>
@@ -693,12 +693,12 @@ await client.mcpServers.listTools("name");
 </dl>
 </details>
 
-## 模型
+## Models
 <details><summary><code>client.models.<a href="/src/api/resources/models/client/Client.ts">list</a>() -> TrueForge.ListAvailableModelsResponse</code></summary>
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -706,13 +706,13 @@ await client.mcpServers.listTools("name");
 <dl>
 <dd>
 
-以精简的 FQN 列表形式返回已配置的模型，供 composer 使用。
+Configured models as a slim FQN list for the composer.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -729,7 +729,7 @@ await client.models.list();
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -749,12 +749,12 @@ await client.models.list();
 </dl>
 </details>
 
-## 调度
+## Schedules
 <details><summary><code>client.schedules.<a href="/src/api/resources/schedules/client/Client.ts">list</a>({ ...params }) -> core.Page&lt;TrueForge.Schedule, TrueForge.ListSchedulesResponse&gt;</code></summary>
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -762,13 +762,13 @@ await client.models.list();
 <dl>
 <dd>
 
-列出该租户的调度，最新的在前。可选地按 `agent_names` 过滤。
+List schedules for the tenant, newest first. Optionally filter by `agent_names`.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -785,7 +785,7 @@ await client.schedules.list();
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -817,7 +817,7 @@ await client.schedules.list();
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -825,13 +825,13 @@ await client.schedules.list();
 <dl>
 <dd>
 
-为现有 Agent（按名称）创建调度，并在激活时添加其第一个待处理运行。
+Create a schedule for an existing agent (by name) and add its first pending run when active.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -855,7 +855,7 @@ await client.schedules.create({
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -887,7 +887,7 @@ await client.schedules.create({
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -895,13 +895,13 @@ await client.schedules.create({
 <dl>
 <dd>
 
-使用调度任务立即开始一次调度运行。不会替换或推进 cron 待处理运行。
+Start a schedule run immediately using the schedule task. Does not replace or advance the cron pending run.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -920,7 +920,7 @@ await client.schedules.createRun({
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -952,7 +952,7 @@ await client.schedules.createRun({
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -960,13 +960,13 @@ await client.schedules.createRun({
 <dl>
 <dd>
 
-按 ID 获取调度。
+Get a schedule by id.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -983,7 +983,7 @@ await client.schedules.get("schedule_id");
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -991,7 +991,7 @@ await client.schedules.get("schedule_id");
 <dl>
 <dd>
 
-**schedule_id:** `string` — 不可变的调度标识符。
+**schedule_id:** `string` — Immutable schedule identifier.
     
 </dd>
 </dl>
@@ -1015,7 +1015,7 @@ await client.schedules.get("schedule_id");
 <dl>
 <dd>
 
-#### 📝 描述
+#### 📝 Description
 
 <dl>
 <dd>
@@ -1023,13 +1023,13 @@ await client.schedules.get("schedule_id");
 <dl>
 <dd>
 
-替换名称和 manifest；当状态/cron/时区发生变化时，替换或删除待处理运行。
+Replace name and manifest; replaces or drops the pending run when status/cron/timezone change.
 </dd>
 </dl>
 </dd>
 </dl>
 
-#### 🔌 用法
+#### 🔌 Usage
 
 <dl>
 <dd>
@@ -1052,7 +1052,7 @@ await client.schedules.update("schedule_id", {
 </dd>
 </dl>
 
-#### ⚙️ 参数
+#### ⚙️ Parameters
 
 <dl>
 <dd>
@@ -1060,7 +1060,7 @@ await client.schedules.update("schedule_id", {
 <dl>
 <dd>
 
-**schedule_id:** `string` — 不可变的调度标识符。
+**schedule_id:** `string` — Immutable schedule identifier.
     
 </dd>
 </dl>
@@ -1092,4 +1092,2529 @@ await client.schedules.update("schedule_id", {
 <dl>
 <dd>
 
-#### 📝
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a schedule and its runs. Idempotent.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.schedules.delete("schedule_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**schedule_id:** `string` — Immutable schedule identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SchedulesClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.schedules.<a href="/src/api/resources/schedules/client/Client.ts">listRuns</a>(schedule_id) -> TrueForge.ListScheduleRunsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List runs of a schedule, newest `scheduled_for` first. Only the schedule creator (or an admin) may list its runs.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.schedules.listRuns("schedule_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**schedule_id:** `string` — Immutable schedule identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SchedulesClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Sessions
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">list</a>({ ...params }) -> core.Page&lt;TrueForge.Session, TrueForge.ListSessionsResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List the caller's sessions (newest first by default), token-paginated. Results are scoped to the authenticated identity via the session store's `created_by` filter (not a client query param). Optional `agent_id` filters to sessions bound to that named agent. Pass `page_token` to fetch the next page, keeping the other query params constant.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.list();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.ListSessionsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">create</a>({ ...params }) -> TrueForge.GetSessionResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a session with `agent` as either `{ name }` (named registry binding) or `{ spec: AgentSpec }` (inline). Named sessions snapshot the agent name at create and resolve the live agent on each turn. Responses use `{ type: "reference", name, id }` or `{ type: "inline", spec }`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.create({
+    agent: {
+        name: "name"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.CreateSessionRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">get</a>(session_id) -> TrueForge.GetSessionResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Fetch a session by ID. Only the session creator (`created_by`) may fetch it.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.get("session_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">delete</a>(session_id) -> void</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a session and all related turns, events, and internal state. Only the session creator (`created_by`) may delete it. Idempotent if already gone.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.delete("session_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">update</a>(session_id, { ...params }) -> TrueForge.GetSessionResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update a session by replacing `agent` with `{ spec: AgentSpec }`. Named (reference) sessions reject agent updates. An empty body is a valid no-op that refreshes `updated_at`. Only the session creator (`created_by`) may update it.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.update("session_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.UpdateSessionRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">cancel</a>(session_id, { ...params }) -> TrueForge.CancelSessionResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Cancel the running last turn for a session. Only the session creator (`created_by`) may cancel.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.cancel("session_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.CancelSessionRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">listEvents</a>(session_id, { ...params }) -> core.Page&lt;TrueForge.SessionEventItem, TrueForge.ListSessionEventsResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List session events as `{ turn_id, event }` across the active turn branch (newest first), including persisted events from a running tip. Each turn contributes turn.created, content events (model.message, tool.call, …), and turn.done when terminal; streaming deltas are not included. Use `page_token` to paginate backward toward older events while retaining the original branch anchor. Only the session creator (`created_by`) may list events.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.listEvents("session_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.ListEventsSessionsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">listTurns</a>(session_id, { ...params }) -> core.Page&lt;TrueForge.Turn, TrueForge.ListTurnsResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List turns for a session (newest first by default), token-paginated. Only the session creator (`created_by`) may list turns.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.listTurns("session_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.ListTurnsSessionsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">createTurnStream</a>(session_id, { ...params }) -> core.Stream&lt;TrueForge.TurnStreamingEvent&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a turn within a session and execute it.
+Only the session creator (`created_by`) may create turns.
+When `stream` is true (default), respond with a Server-Sent Events stream of turn events.
+When `stream` is false, return the turn immediately with `state.status: "running"` while execution continues in the background; use get turn or subscribe to observe completion.
+Use `previous_turn_id` to chain to the session's last turn (defaults to `auto`); use `none` for a new root.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+const response = await client.sessions.createTurnStream("session_id", {});
+for await (const item of response) {
+    console.log(item);
+}
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.CreateTurnSessionsStreamRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">createTurn</a>(session_id, { ...params }) -> TrueForge.GetTurnResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a turn within a session and execute it.
+Only the session creator (`created_by`) may create turns.
+When `stream` is true (default), respond with a Server-Sent Events stream of turn events.
+When `stream` is false, return the turn immediately with `state.status: "running"` while execution continues in the background; use get turn or subscribe to observe completion.
+Use `previous_turn_id` to chain to the session's last turn (defaults to `auto`); use `none` for a new root.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.createTurn("session_id", {});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.CreateTurnSessionsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">getTurn</a>(session_id, turn_id) -> TrueForge.GetTurnResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Fetch a single turn by ID. Only the session creator (`created_by`) may fetch it.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.getTurn("session_id", "turn_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**turn_id:** `string` — Turn identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">downloadSandboxFile</a>(session_id, turn_id, { ...params }) -> core.BinaryResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Download a file from the sandbox this turn ran in. Paths come from the assistant's `sandbox_artifacts` block. Only the session creator (`created_by`) may download.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.downloadSandboxFile("session_id", "turn_id", {
+    path: "x"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**turn_id:** `string` — Turn identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.DownloadSandboxFileSessionsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">listTurnEvents</a>(session_id, turn_id, { ...params }) -> core.Page&lt;TrueForge.SessionEvent, TrueForge.ListTurnEventsResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Paginated persisted events for a turn (insertion order by default). Only the session creator (`created_by`) may list events.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.sessions.listTurnEvents("session_id", "turn_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**turn_id:** `string` — Turn identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.ListTurnEventsSessionsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sessions.<a href="/src/api/resources/sessions/client/Client.ts">subscribeToTurn</a>(session_id, turn_id, { ...params }) -> core.Stream&lt;TrueForge.TurnStreamingEvent&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Subscribe to the live SSE stream for a turn. Only the session creator (`created_by`) may subscribe. Pass `after_sequence_number` to resume after a disconnect (exclusive — events after this sequence number are replayed).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+const response = await client.sessions.subscribeToTurn("session_id", "turn_id");
+for await (const item of response) {
+    console.log(item);
+}
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**session_id:** `string` — Session identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**turn_id:** `string` — Turn identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.SubscribeToTurnSessionsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Skills
+<details><summary><code>client.skills.<a href="/src/api/resources/skills/client/Client.ts">list</a>() -> TrueForge.ListAvailableSkillsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Configured skills as a slim name/description list for the composer.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.skills.list();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `SkillsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Catalogs McpServers
+<details><summary><code>client.catalogs.mcpServers.<a href="/src/api/resources/catalogs/resources/mcpServers/client/Client.ts">list</a>() -> TrueForge.GetMcpServerCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Shipped MCP server presets (discovery-only). Copy into PUT /settings/mcp-servers to configure.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.catalogs.mcpServers.list();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `McpServersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Catalogs ModelProviders
+<details><summary><code>client.catalogs.modelProviders.<a href="/src/api/resources/catalogs/resources/modelProviders/client/Client.ts">list</a>() -> TrueForge.GetModelProviderCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Shipped model-provider presets (discovery-only). Copy into PUT /settings/model-providers to configure. Includes a `custom` sentinel with `supported_reasoning_efforts`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.catalogs.modelProviders.list();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `ModelProvidersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Catalogs SandboxProviders
+<details><summary><code>client.catalogs.sandboxProviders.<a href="/src/api/resources/catalogs/resources/sandboxProviders/client/Client.ts">list</a>() -> TrueForge.GetSandboxProviderCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Shipped sandbox-provider presets (discovery-only). Copy into PUT /settings/sandbox-providers to configure.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.catalogs.sandboxProviders.list();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `SandboxProvidersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Catalogs Skills
+<details><summary><code>client.catalogs.skills.<a href="/src/api/resources/catalogs/resources/skills/client/Client.ts">list</a>() -> TrueForge.GetSkillCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Shipped skill presets (discovery-only). Copy into PUT /settings/skills to configure.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.catalogs.skills.list();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `SkillsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Internal Metrics
+<details><summary><code>client.internal.metrics.<a href="/src/api/resources/internal/resources/metrics/client/Client.ts">listCharts</a>() -> TrueForge.GetSessionMetricsChartResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List available session metric charts.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.internal.metrics.listCharts();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `MetricsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.internal.metrics.<a href="/src/api/resources/internal/resources/metrics/client/Client.ts">getChartData</a>({ ...params }) -> TrueForge.GetSessionMetricsChartDataResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Return one chart for the caller's sessions on a named agent over an inclusive creation-time window. Uses hourly buckets for windows up to 24 hours and daily UTC buckets otherwise.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.internal.metrics.getChartData({
+    agentId: "agent_id",
+    startTimestamp: new Date("2024-01-15T09:30:00.000Z"),
+    endTimestamp: new Date("2024-01-15T09:30:00.000Z"),
+    chartName: "sessions_over_time"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.internal.GetChartDataMetricsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `MetricsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.internal.metrics.<a href="/src/api/resources/internal/resources/metrics/client/Client.ts">getMeters</a>({ ...params }) -> TrueForge.GetSessionMetricsMeterResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Aggregate the caller's session meters for a named agent over an inclusive creation-time window.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.internal.metrics.getMeters({
+    agentId: "agent_id",
+    startTimestamp: new Date("2024-01-15T09:30:00.000Z"),
+    endTimestamp: new Date("2024-01-15T09:30:00.000Z")
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.internal.GetMetersMetricsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `MetricsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Internal Sessions
+<details><summary><code>client.internal.sessions.<a href="/src/api/resources/internal/resources/sessions/client/Client.ts">getOrCreateByExternalId</a>({ ...params }) -> TrueForge.GetSessionResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Idempotent get-or-create: returns the existing session for this `external_id`, or creates one
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.internal.sessions.getOrCreateByExternalId({
+    agent: {
+        name: "name"
+    },
+    externalId: "external_id"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.internal.GetOrCreateSessionByExternalIdRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SessionsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Internal Agents
+<details><summary><code>client.internal.agents.<a href="/src/api/resources/internal/resources/agents/client/Client.ts">getCodeSnippets</a>(agent_id) -> TrueForge.GetAgentCodeSnippetsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+TypeScript TrueForge SDK samples (stream and non-stream) for creating a session and turn against this agent.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.internal.agents.getCodeSnippets("agent_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_id:** `string` — Immutable agent identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `AgentsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Settings McpServers
+<details><summary><code>client.settings.mcpServers.<a href="/src/api/resources/settings/resources/mcpServers/client/Client.ts">list</a>() -> TrueForge.ListMcpServersResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+All MCP servers with nested auth_status (settings / admin projection). Header auth values are redacted.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.mcpServers.list();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `McpServersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.settings.mcpServers.<a href="/src/api/resources/settings/resources/mcpServers/client/Client.ts">create</a>({ ...params }) -> TrueForge.GetMcpServerResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Creates an MCP server by `name`. Fails if `name` is already taken. Runs DCR registration when `auth.type` is `dcr`. Header secrets: real value required; redacted with no stored value returns 400.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.mcpServers.create({
+    manifest: {
+        description: "description",
+        name: "name",
+        type: "remote",
+        url: "url"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.settings.CreateMcpServerRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `McpServersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.settings.mcpServers.<a href="/src/api/resources/settings/resources/mcpServers/client/Client.ts">createOrUpdate</a>({ ...params }) -> TrueForge.GetMcpServerResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create or replace by `name`. Header secrets: real value sets/rotates; redacted keeps existing (400 if none).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.mcpServers.createOrUpdate({
+    manifest: {
+        description: "description",
+        name: "name",
+        type: "remote",
+        url: "url"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.settings.UpdateMcpServerRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `McpServersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.settings.mcpServers.<a href="/src/api/resources/settings/resources/mcpServers/client/Client.ts">get</a>(name) -> TrueForge.GetMcpServerResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+A single MCP server by name, with nested auth_status (settings / admin projection). Header auth values are redacted.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.mcpServers.get("name");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**name:** `string` — MCP server name.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `McpServersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Settings ModelProviders
+<details><summary><code>client.settings.modelProviders.<a href="/src/api/resources/settings/resources/modelProviders/client/Client.ts">list</a>() -> TrueForge.ListModelProvidersResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+All configured providers with nested manifests.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.modelProviders.list();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `ModelProvidersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.settings.modelProviders.<a href="/src/api/resources/settings/resources/modelProviders/client/Client.ts">create</a>({ ...params }) -> TrueForge.GetModelProviderResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Creates a provider (models included). Fails if `name` is already taken. Well-known types use `type` as `name` (one each); `custom` is named by the caller. `auth.api_key`: real value required; redacted with no stored secret returns 400.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.modelProviders.create({
+    manifest: {
+        auth: {
+            apiKey: "api_key"
+        },
+        models: [{
+                modelId: "model_id",
+                name: "name",
+                properties: {}
+            }],
+        type: "alibaba"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.settings.CreateModelProviderRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `ModelProvidersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.settings.modelProviders.<a href="/src/api/resources/settings/resources/modelProviders/client/Client.ts">createOrUpdate</a>({ ...params }) -> TrueForge.GetModelProviderResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create or replace a provider (models included). Well-known types use `type` as `name` (one each); `custom` is named by the caller. `auth.api_key`: real value sets/rotates; redacted keeps existing (400 if none).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.modelProviders.createOrUpdate({
+    manifest: {
+        auth: {
+            apiKey: "api_key"
+        },
+        models: [{
+                modelId: "model_id",
+                name: "name",
+                properties: {}
+            }],
+        type: "alibaba"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.settings.UpdateModelProviderRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `ModelProvidersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Settings SandboxProviders
+<details><summary><code>client.settings.sandboxProviders.<a href="/src/api/resources/settings/resources/sandboxProviders/client/Client.ts">get</a>() -> TrueForge.GetSandboxProviderResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+The single configured sandbox provider for this tenant. `auth.api_key` is redacted.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.sandboxProviders.get();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `SandboxProvidersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.settings.sandboxProviders.<a href="/src/api/resources/settings/resources/sandboxProviders/client/Client.ts">createOrUpdate</a>({ ...params }) -> TrueForge.GetSandboxProviderResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Upserts the single sandbox provider for this tenant: creates it or replaces its entire configuration. `auth.api_key`: real value sets/rotates; redacted keeps existing (400 if none).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.sandboxProviders.createOrUpdate({
+    manifest: {
+        auth: {
+            apiKey: "api_key"
+        },
+        autoArchiveIntervalInMinutes: 1,
+        autoDeleteIntervalInMinutes: 1,
+        autoStopIntervalInMinutes: 1,
+        execTimeoutMs: 1,
+        type: "daytona"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.settings.UpdateSandboxProviderRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SandboxProvidersClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Settings Skills
+<details><summary><code>client.settings.skills.<a href="/src/api/resources/settings/resources/skills/client/Client.ts">list</a>() -> TrueForge.ListSkillsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+All configured skills with nested manifests (settings / admin projection).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.skills.list();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `SkillsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.settings.skills.<a href="/src/api/resources/settings/resources/skills/client/Client.ts">create</a>({ ...params }) -> TrueForge.GetSkillResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Creates a skill keyed by `name`. Fails if `name` is already taken.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.skills.create({
+    manifest: {
+        description: "description",
+        name: "name",
+        ref: "ref",
+        type: "git",
+        url: "url"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.settings.CreateSkillRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SkillsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.settings.skills.<a href="/src/api/resources/settings/resources/skills/client/Client.ts">createOrUpdate</a>({ ...params }) -> TrueForge.GetSkillResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Full upsert keyed by `name`: creates the skill or replaces its entire manifest.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.settings.skills.createOrUpdate({
+    manifest: {
+        description: "description",
+        name: "name",
+        ref: "ref",
+        type: "git",
+        url: "url"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `TrueForge.settings.UpdateSkillRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `SkillsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+

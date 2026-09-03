@@ -1,5 +1,55 @@
 # @truefoundry/trueforge
 
+## 0.2.0-rc.1
+
+### Minor Changes
+
+- ecdadb2: Add a slot-driven agent Metrics tab with aggregate cards, time-range filtering, and Harness-backed line charts.
+- ecdadb2: Adds first-class cron schedules for existing agents: persist them, manage them via /api/v1/schedules, validate cron policy at write time, and advance due runs through a single-dispatcher claim path.
+- ecdadb2: Add optional `OIDC_ALLOWED_EMAILS` allowlist (exact addresses and `*` globs) so OIDC logins can be limited to approved emails or domains.
+- ecdadb2: Store Postgres app tables and Kysely migration bookkeeping in a dedicated `trueforge` schema, with an automatic one-time move from `public` so existing installs keep their data and migration history.
+- ecdadb2: Add a TrueFoundry-managed model registry. When `TRUEFOUNDRY_SERVICEFOUNDRY_SERVER_URL` is set, models are listed from the TrueFoundry ServiceFoundry server and turns are routed through the tenant's default AI Gateway with the caller's token. Mutually exclusive with OIDC. Supports internal mutual TLS to the ServiceFoundry server via `TRUEFOUNDRY_MTLS_ENABLED`/`TRUEFOUNDRY_MTLS_CERTS_DIR`.
+- ecdadb2: Unify request-scoped RequestContext across standalone, OIDC, and TrueFoundry auth. `/auth/me` returns `{ data: { type, tenant_id, subject, roles } }` (`type` is `oidc-connected` | `default`; OpenAPI/SDK regen deferred to CI).
+
+### Patch Changes
+
+- ecdadb2: Persist zero-initialized metrics on agent sessions.
+- ecdadb2: Add caller-scoped session metrics meters, charts, and chart-data under `/internal/metrics` via a server-owned `ISessionMetricsStore`.
+- ecdadb2: Fold session metrics totals on createTurn and terminal writes.
+- ecdadb2: Add persisted `agent.metadata` on Postgres and SQLite; store `updateAgent` can patch manifest and/or metadata.
+- ecdadb2: Add agent `external_id` (`string | null` on create) with a tenant-scoped partial unique index (Postgres and SQLite).
+- ecdadb2: Drop unused `agent.metadata`; remote identity is stored in `external_id`.
+- ecdadb2: Add GET /api/v1/agents/{agent_id}/code-snippets with TypeScript TrueForge SDK stream and non-stream samples.
+- ecdadb2: Add a dedicated controller entry point (`dist/controller-main.js`) that runs the periodic control loops (schedule dispatch) as a single-replica process for distributed mode (`STANDALONE=false`). It targets the server API via the new `SERVER_URL` env (default `http://localhost:$PORT`). Standalone mode keeps running the controller inside the server process.
+- ecdadb2: Report a Daytona key that cannot register snapshots as missing key permissions (403) instead of an invalid API key (422), and name the grants to add in the Daytona dashboard.
+- ecdadb2: Cap Daytona status-refresh calls at 1 minute so a stalled provider cannot hang request handlers.
+- ecdadb2: Make optional `VITE_BASE_PATH` apply to both the UI public path and API/auth URLs (defaults to `/`).
+- ecdadb2: Move `resolveInvokeHeaders` onto `IMcpServerWithAuthStore` (not `IMcpServerStore`) so DB backends stay CRUD-only and turn/MCP invoke paths take the request-scoped with-auth store for configured headers and TrueFoundry gateway Bearer.
+- ecdadb2: Split MCP server persistence (`IMcpServerStore`) from Connect UX auth (`IMcpServerWithAuthStore` / `McpServerWithAuthStore`) so DB backends stay CRUD + OAuth client columns while authorize/status/revoke compose in via a token store.
+- ecdadb2: Accept `DATABASE_URL` for hosted mode so managed Postgres (e.g. Railway) can be wired without discrete `POSTGRES_*` vars.
+- ecdadb2: List schedules is token-paginated (`limit` / `page_token`) and filters by comma-separated `agent_names`.
+- ecdadb2: Add GET /api/v1/schedules/{schedule_id}/runs to list a schedule's runs (newest `scheduled_for` first), with the same creator-or-admin access as other schedule routes.
+- ecdadb2: Add POST /api/v1/schedules/runs to trigger an immediate schedule run
+- ecdadb2: Dispatch schedule runs through the session/turn API: get-or-create a session keyed by run id, then create a turn only when that session has none.
+- ecdadb2: Add tenant-unique optional session `external_id`, `Sessions.getOrCreateByExternalId`, and an idempotent `POST /internal/sessions/get-or-create-by-external-id` endpoint and SDK method.
+- ecdadb2: Add caller-owned session `metadata` (`Record<string, string>` with size limits) on create, update, and read. Persist as a new `session.metadata` jsonb column; leave session `custom` unchanged.
+- ecdadb2: TrueFoundry MCP invoke headers are owned by the MCP store (`resolveInvokeHeaders`), so gateway Bearer comes from the request-scoped store rather than being threaded through turn/tools APIs.
+- ecdadb2: Per-MCP-server request headers via `x-tfg-mcp-headers`, merged into the invoke headers for the named server. Lets a caller that authenticates as one identity give each MCP server the identity it should actually see.
+- ecdadb2: Add TrueFoundry-managed MCP list/get (SFY registry, gateway proxy URL, create/update 424).
+- Updated dependencies [ecdadb2]
+- Updated dependencies [ecdadb2]
+- Updated dependencies [ecdadb2]
+- Updated dependencies [ecdadb2]
+- Updated dependencies [ecdadb2]
+- Updated dependencies [ecdadb2]
+- Updated dependencies [ecdadb2]
+- Updated dependencies [ecdadb2]
+- Updated dependencies [ecdadb2]
+- Updated dependencies [ecdadb2]
+- Updated dependencies [ecdadb2]
+  - @truefoundry/trueforge-sdk@0.1.4-rc.1
+  - @truefoundry/trueforge-core@0.2.0-rc.1
+
 ## 0.2.0-rc.0
 
 ### 次要更改

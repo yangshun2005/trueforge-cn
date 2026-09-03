@@ -1,53 +1,54 @@
-# TrueForge TypeScript 库
+# TrueForge TypeScript Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=Truefoundry%2FTypeScript)
 [![npm shield](https://img.shields.io/npm/v/@truefoundry/trueforge-sdk)](https://www.npmjs.com/package/@truefoundry/trueforge-sdk)
 
-TrueForge Agent Harness Server 的 TypeScript 客户端：一个自托管运行时，用于执行 Agent 回合并通过 Server-Sent Events 进行流式传输。
+TypeScript client for the TrueForge Agent Harness Server: a self-hosted runtime that executes agent turns and streams them over Server-Sent Events.
 
-当服务器启用认证时，可通过可选的 `token` 客户端选项传递 ID 令牌（`Authorization: Bearer`）。
+When auth is enabled on the server, pass an ID token via the optional `token` client option (`Authorization: Bearer`).
 
-## 目录
 
-- [文档](#文档)
-- [安装](#安装)
-- [参考](#参考)
-- [用法](#用法)
-- [请求和响应类型](#请求和响应类型)
-- [异常处理](#异常处理)
-- [流式响应](#流式响应)
-- [二进制响应](#二进制响应)
-- [高级](#高级)
-  - [子包导出](#子包导出)
-  - [附加请求头](#附加请求头)
-  - [附加查询字符串参数](#附加查询字符串参数)
-  - [重试](#重试)
-  - [超时](#超时)
-  - [中止请求](#中止请求)
-  - [访问原始响应数据](#访问原始响应数据)
-  - [日志记录](#日志记录)
-  - [自定义 Fetch](#自定义-fetch)
-  - [自定义 Fetcher](#自定义-fetcher)
-  - [运行时兼容性](#运行时兼容性)
-- [贡献](#贡献)
+## Table of Contents
 
-## 文档
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Reference](#reference)
+- [Usage](#usage)
+- [Request and Response Types](#request-and-response-types)
+- [Exception Handling](#exception-handling)
+- [Streaming Response](#streaming-response)
+- [Binary Response](#binary-response)
+- [Advanced](#advanced)
+  - [Subpackage Exports](#subpackage-exports)
+  - [Additional Headers](#additional-headers)
+  - [Additional Query String Parameters](#additional-query-string-parameters)
+  - [Retries](#retries)
+  - [Timeouts](#timeouts)
+  - [Aborting Requests](#aborting-requests)
+  - [Access Raw Response Data](#access-raw-response-data)
+  - [Logging](#logging)
+  - [Custom Fetch](#custom-fetch)
+  - [Custom Fetcher](#custom-fetcher)
+  - [Runtime Compatibility](#runtime-compatibility)
+- [Contributing](#contributing)
 
-API 参考文档可在[此处](https://trueforge.dev/api/use-agent)获取。
+## Documentation
 
-## 安装
+API reference documentation is available [here](https://trueforge.dev/api/use-agent).
+
+## Installation
 
 ```sh
 npm i -s @truefoundry/trueforge-sdk
 ```
 
-## 参考
+## Reference
 
-该库的完整参考可在[此处](./reference.md)获取。
+A full reference for this library is available [here](./reference.md).
 
-## 用法
+## Usage
 
-使用以下方式实例化并使用客户端：
+Instantiate and use the client with the following:
 
 ```typescript
 import { TrueForge } from "@truefoundry/trueforge-sdk";
@@ -59,9 +60,10 @@ for await (const item of response) {
 }
 ```
 
-## 请求和响应类型
+## Request and Response Types
 
-SDK 将所有请求和响应类型导出为 TypeScript 接口。只需使用以下命名空间导入它们：
+The SDK exports all request and response types as TypeScript interfaces. Simply import them with the
+following namespace:
 
 ```typescript
 import { TrueForge } from "@truefoundry/trueforge-sdk";
@@ -71,9 +73,10 @@ const request: TrueForge.CreateAgentRequest = {
 };
 ```
 
-## 异常处理
+## Exception Handling
 
-当 API 返回非成功状态码（4xx 或 5xx 响应）时，将抛出以下错误类的子类。
+When the API returns a non-success status code (4xx or 5xx response), a subclass of the following error
+will be thrown.
 
 ```typescript
 import { TrueForgeError } from "@truefoundry/trueforge-sdk";
@@ -90,9 +93,10 @@ try {
 }
 ```
 
-## 流式响应
+## Streaming Response
 
-某些端点返回流式响应，而不是一次性返回完整响应。SDK 使用异步迭代器，因此您可以使用 `for await...of` 循环来消费响应。
+Some endpoints return streaming responses instead of returning the full response at once.
+The SDK uses async iterators, so you can consume the responses using a `for await...of` loop.
 
 ```typescript
 import { TrueForge } from "@truefoundry/trueforge-sdk";
@@ -104,9 +108,9 @@ for await (const item of response) {
 }
 ```
 
-## 二进制响应
+## Binary Response
 
-您可以使用 `BinaryResponse` 类型从端点消费二进制数据，该类型允许您选择如何消费数据：
+You can consume binary data from endpoints using the `BinaryResponse` type which lets you choose how to consume the data:
 
 ```typescript
 const response = await client.sessions.downloadSandboxFile(...);
@@ -114,12 +118,12 @@ const stream: ReadableStream<Uint8Array> = response.stream();
 // const arrayBuffer: ArrayBuffer = await response.arrayBuffer();
 // const blob: Blob = response.blob();
 // const bytes: Uint8Array = response.bytes();
-// 响应体只能使用一次，因此您必须选择上述方法之一。
-// 如果您想检查响应体是否已被使用，可以使用以下属性。
+// You can only use the response body once, so you must choose one of the above methods.
+// If you want to check if the response body has been used, you can use the following property.
 const bodyUsed = response.bodyUsed;
 ```
 <details>
-<summary>将二进制响应保存到文件</summary>
+<summary>Save binary response to a file</summary>
 
 <blockquote>
 <details>
@@ -127,7 +131,7 @@ const bodyUsed = response.bodyUsed;
 
 <blockquote>
 <details>
-<summary>ReadableStream（最高效）</summary>
+<summary>ReadableStream (most-efficient)</summary>
 
 ```ts
 import { createWriteStream } from 'fs';
@@ -181,7 +185,7 @@ await writeFile('output.bin', Buffer.from(arrayBuffer));
 
 <blockquote>
 <details>
-<summary>Bytes（UIntArray8）</summary>
+<summary>Bytes (UIntArray8)</summary>
 
 ```ts
 import { writeFile } from 'fs/promises';
@@ -204,7 +208,7 @@ await writeFile('path/to/file', bytes);
 
 <blockquote>
 <details>
-<summary>ReadableStream（最高效）</summary>
+<summary>ReadableStream (most-efficient)</summary>
 
 ```ts
 const response = await client.sessions.downloadSandboxFile(...);
@@ -246,7 +250,7 @@ await Bun.write('path/to/file', blob);
 
 <blockquote>
 <details>
-<summary>Bytes（UIntArray8）</summary>
+<summary>Bytes (UIntArray8)</summary>
 
 ```ts
 const response = await client.sessions.downloadSandboxFile(...);
@@ -267,7 +271,7 @@ await Bun.write('path/to/file', bytes);
 
 <blockquote>
 <details>
-<summary>ReadableStream（最高效）</summary>
+<summary>ReadableStream (most-efficient)</summary>
 
 ```ts
 const response = await client.sessions.downloadSandboxFile(...);
@@ -311,7 +315,7 @@ await Deno.writeFile('path/to/file', new Uint8Array(arrayBuffer));
 
 <blockquote>
 <details>
-<summary>Bytes（UIntArray8）</summary>
+<summary>Bytes (UIntArray8)</summary>
 
 ```ts
 const response = await client.sessions.downloadSandboxFile(...);
@@ -328,11 +332,11 @@ await Deno.writeFile('path/to/file', bytes);
 
 <blockquote>
 <details>
-<summary>浏览器</summary>
+<summary>Browser</summary>
 
 <blockquote>
 <details>
-<summary>Blob（最高效）</summary>
+<summary>Blob (most-efficient)</summary>
 
 ```ts
 const response = await client.sessions.downloadSandboxFile(...);
@@ -340,7 +344,7 @@ const response = await client.sessions.downloadSandboxFile(...);
 const blob = await response.blob();
 const url = URL.createObjectURL(blob);
 
-// 触发下载
+// trigger download
 const a = document.createElement('a');
 a.href = url;
 a.download = 'filename';
@@ -371,7 +375,7 @@ while (true) {
 const blob = new Blob(chunks);
 const url = URL.createObjectURL(blob);
 
-// 触发下载
+// trigger download
 const a = document.createElement('a');
 a.href = url;
 a.download = 'filename';
@@ -393,7 +397,7 @@ const arrayBuffer = await response.arrayBuffer();
 const blob = new Blob([arrayBuffer]);
 const url = URL.createObjectURL(blob);
 
-// 触发下载
+// trigger download
 const a = document.createElement('a');
 a.href = url;
 a.download = 'filename';
@@ -406,7 +410,7 @@ URL.revokeObjectURL(url);
 
 <blockquote>
 <details>
-<summary>Bytes（UIntArray8）</summary>
+<summary>Bytes (UIntArray8)</summary>
 
 ```ts
 const response = await client.sessions.downloadSandboxFile(...);
@@ -415,7 +419,7 @@ const bytes = await response.bytes();
 const blob = new Blob([bytes]);
 const url = URL.createObjectURL(blob);
 
-// 触发下载
+// trigger download
 const a = document.createElement('a');
 a.href = url;
 a.download = 'filename';
@@ -433,7 +437,7 @@ URL.revokeObjectURL(url);
 </blockquote>
 
 <details>
-<summary>将二进制响应转换为文本</summary>
+<summary>Convert binary response to text</summary>
 
 <blockquote>
 <details>
@@ -479,7 +483,7 @@ const text = await blob.text();
 
 <blockquote>
 <details>
-<summary>Bytes（UIntArray8）</summary>
+<summary>Bytes (UIntArray8)</summary>
 
 ```ts
 const response = await client.sessions.downloadSandboxFile(...);
@@ -493,11 +497,11 @@ const text = new TextDecoder().decode(bytes);
 
 </details>
 
-## 高级
+## Advanced
 
-### 子包导出
+### Subpackage Exports
 
-此 SDK 支持直接导入子包客户端，这允许 JavaScript 打包器进行 tree-shaking，仅包含导入的子包代码。这样可以显著减小打包体积。
+This SDK supports direct imports of subpackage clients, which allows JavaScript bundlers to tree-shake and include only the imported subpackage code. This results in much smaller bundle sizes.
 
 ```typescript
 import { AgentsClient } from '@truefoundry/trueforge-sdk/agents';
@@ -505,9 +509,9 @@ import { AgentsClient } from '@truefoundry/trueforge-sdk/agents';
 const client = new AgentsClient({...});
 ```
 
-### 附加请求头
+### Additional Headers
 
-如果您希望在请求中发送附加请求头，请使用 `headers` 请求选项。
+If you would like to send additional headers as part of the request, use the `headers` request option.
 
 ```typescript
 import { TrueForge } from "@truefoundry/trueforge-sdk";
@@ -526,9 +530,9 @@ const response = await client.sessions.createTurnStream(..., {
 });
 ```
 
-### 附加查询字符串参数
+### Additional Query String Parameters
 
-如果您希望在请求中发送附加查询字符串参数，请使用 `queryParams` 请求选项。
+If you would like to send additional query string parameters as part of the request, use the `queryParams` request option.
 
 ```typescript
 const response = await client.sessions.createTurnStream(..., {
@@ -538,57 +542,60 @@ const response = await client.sessions.createTurnStream(..., {
 });
 ```
 
-### 重试
+### Retries
 
-SDK 配备了带指数退避的自动重试机制。只要请求被视为可重试且重试次数未超过配置的重试限制（默认：2），请求就会被重试。
+The SDK is instrumented with automatic retries with exponential backoff. A request will be retried as long
+as the request is deemed retryable and the number of retry attempts has not grown larger than the configured
+retry limit (default: 2).
 
-哪些状态码会被重试取决于 `retryStatusCodes` 生成器配置：
+Which status codes are retried depends on the `retryStatusCodes` generator configuration:
 
-**`legacy`**（当前默认）：重试以下状态码
-- [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408)（超时）
-- [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429)（请求过多）
-- [5XX](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses)（所有服务器错误，包括 500）
+**`legacy`** (current default): retries on
+- [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408) (Timeout)
+- [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
+- [5XX](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses) (All server errors, including 500)
 
-**`recommended`**：重试以下状态码
-- [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408)（超时）
-- [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429)（请求过多）
-- [502](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502)（错误网关）
-- [503](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)（服务不可用）
-- [504](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/504)（网关超时）
+**`recommended`**: retries on
+- [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408) (Timeout)
+- [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
+- [502](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502) (Bad Gateway)
+- [503](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503) (Service Unavailable)
+- [504](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/504) (Gateway Timeout)
 
-使用 `maxRetries` 请求选项来配置此行为。
-
-```typescript
-const response = await client.sessions.createTurnStream(..., {
-    maxRetries: 0 // 在请求级别覆盖 maxRetries
-});
-```
-
-### 超时
-
-SDK 默认超时时间为 60 秒。使用 `timeoutInSeconds` 选项来配置此行为。
+Use the `maxRetries` request option to configure this behavior.
 
 ```typescript
 const response = await client.sessions.createTurnStream(..., {
-    timeoutInSeconds: 30 // 将超时时间覆盖为 30 秒
+    maxRetries: 0 // override maxRetries at the request level
 });
 ```
 
-### 中止请求
+### Timeouts
 
-SDK 允许用户通过传入中止信号（abort signal）在任何时候中止请求。
+The SDK defaults to a 60 second timeout. Use the `timeoutInSeconds` option to configure this behavior.
+
+```typescript
+const response = await client.sessions.createTurnStream(..., {
+    timeoutInSeconds: 30 // override timeout to 30s
+});
+```
+
+### Aborting Requests
+
+The SDK allows users to abort requests at any point by passing in an abort signal.
 
 ```typescript
 const controller = new AbortController();
 const response = await client.sessions.createTurnStream(..., {
     abortSignal: controller.signal
 });
-controller.abort(); // 中止请求
+controller.abort(); // aborts the request
 ```
 
-### 访问原始响应数据
+### Access Raw Response Data
 
-SDK 通过 `.withRawResponse()` 方法提供对原始响应数据（包括请求头）的访问。`.withRawResponse()` 方法返回一个 Promise，解析为一个包含 `data` 和 `rawResponse` 属性的对象。
+The SDK provides access to raw response data, including headers, through the `.withRawResponse()` method.
+The `.withRawResponse()` method returns a promise that results to an object with a `data` and a `rawResponse` property.
 
 ```typescript
 const { data, rawResponse } = await client.sessions.createTurnStream(...).withRawResponse();
@@ -597,9 +604,9 @@ console.log(data);
 console.log(rawResponse.headers['X-My-Header']);
 ```
 
-### 日志记录
+### Logging
 
-SDK 支持日志记录。您可以通过向客户端选项传入 `logging` 对象来配置日志记录器。
+The SDK supports logging. You can configure the logger by passing in a `logging` object to the client options.
 
 ```typescript
 import { TrueForge, logging } from "@truefoundry/trueforge-sdk";
@@ -607,29 +614,29 @@ import { TrueForge, logging } from "@truefoundry/trueforge-sdk";
 const client = new TrueForge({
     ...
     logging: {
-        level: logging.LogLevel.Debug, // 默认为 logging.LogLevel.Info
-        logger: new logging.ConsoleLogger(), // 默认为 ConsoleLogger
-        silent: false, // 默认为 true，设置为 false 以启用日志记录
+        level: logging.LogLevel.Debug, // defaults to logging.LogLevel.Info
+        logger: new logging.ConsoleLogger(), // defaults to ConsoleLogger
+        silent: false, // defaults to true, set to false to enable logging
     }
 });
 ```
-`logging` 对象可以包含以下属性：
-- `level`：要使用的日志级别。默认为 `logging.LogLevel.Info`。
-- `logger`：要使用的日志记录器。默认为 `logging.ConsoleLogger`。
-- `silent`：是否静默日志记录器。默认为 `true`。
+The `logging` object can have the following properties:
+- `level`: The log level to use. Defaults to `logging.LogLevel.Info`.
+- `logger`: The logger to use. Defaults to a `logging.ConsoleLogger`.
+- `silent`: Whether to silence the logger. Defaults to `true`.
 
-`level` 属性可以是以下值之一：
+The `level` property can be one of the following values:
 - `logging.LogLevel.Debug`
 - `logging.LogLevel.Info`
 - `logging.LogLevel.Warn`
 - `logging.LogLevel.Error`
 
-要提供自定义日志记录器，您可以传入一个实现了 `logging.ILogger` 接口的对象。
+To provide a custom logger, you can pass in an object that implements the `logging.ILogger` interface.
 
 <details>
-<summary>自定义日志记录器示例</summary>
+<summary>Custom logger examples</summary>
 
-以下是使用流行的 `winston` 日志库的示例。
+Here's an example using the popular `winston` logging library.
 ```ts
 import winston from 'winston';
 
@@ -643,7 +650,7 @@ const logger: logging.ILogger = {
 };
 ```
 
-以下是使用流行的 `pino` 日志库的示例。
+Here's an example using the popular `pino` logging library.
 
 ```ts
 import pino from 'pino';
@@ -660,9 +667,61 @@ const logger: logging.ILogger = {
 </details>
 
 
-### 自定义 Fetch
+### Custom Fetch
 
-SDK 提供了一个底层的 `fetch` 方法，用于发起自定义 HTTP 请求，同时仍然受益于 SDK 级别的配置，如认证、重试、超时和日志记录。这对于调用 SDK 中尚未支持的 API 端点非常有用。
+The SDK provides a low-level `fetch` method for making custom HTTP requests while still
+benefiting from SDK-level configuration like authentication, retries, timeouts, and logging.
+This is useful for calling API endpoints not yet supported in the SDK.
 
 ```typescript
+const response = await client.fetch("/v1/custom/endpoint", {
+    method: "GET",
+}, {
+    timeoutInSeconds: 30,
+    maxRetries: 3,
+    headers: {
+        "X-Custom-Header": "custom-value",
+    },
+});
+
+const data = await response.json();
 ```
+
+### Custom Fetcher
+
+The SDK provides a way for you to customize the underlying HTTP client / Fetch function. If you're running in an
+unsupported environment, this provides a way for you to break glass and ensure the SDK works.
+
+```typescript
+import { TrueForge } from "@truefoundry/trueforge-sdk";
+
+const client = new TrueForge({
+    ...
+    fetcher: // provide your implementation here
+});
+```
+
+### Runtime Compatibility
+
+
+The SDK works in the following runtimes:
+
+
+
+- Node.js 18+
+- Vercel
+- Cloudflare Workers
+- Deno v1.25+
+- Bun 1.0+
+- React Native
+
+
+## Contributing
+
+While we value open-source contributions to this SDK, this library is generated programmatically.
+Additions made directly to this library would have to be moved over to our generation code,
+otherwise they would be overwritten upon the next generated release. Feel free to open a PR as
+a proof of concept, but know that we will not be able to merge it as-is. We suggest opening
+an issue first to discuss with us!
+
+On the other hand, contributions to the README are always very welcome!

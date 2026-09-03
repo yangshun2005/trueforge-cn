@@ -1,5 +1,20 @@
 # @truefoundry/trueforge-core
 
+## 0.2.0-rc.1
+
+### Minor Changes
+
+- ecdadb2: Add a TrueFoundry-managed model registry. When `TRUEFOUNDRY_SERVICEFOUNDRY_SERVER_URL` is set, models are listed from the TrueFoundry ServiceFoundry server and turns are routed through the tenant's default AI Gateway with the caller's token. Mutually exclusive with OIDC. Supports internal mutual TLS to the ServiceFoundry server via `TRUEFOUNDRY_MTLS_ENABLED`/`TRUEFOUNDRY_MTLS_CERTS_DIR`.
+
+### Patch Changes
+
+- ecdadb2: Persist zero-initialized metrics on agent sessions.
+- ecdadb2: Add caller-scoped session metrics meters, charts, and chart-data under `/internal/metrics` via a server-owned `ISessionMetricsStore`.
+- ecdadb2: Fold session metrics totals on createTurn and terminal writes.
+- ecdadb2: Cap Daytona status-refresh calls at 1 minute so a stalled provider cannot hang request handlers.
+- ecdadb2: Add tenant-unique optional session `external_id`, `Sessions.getOrCreateByExternalId`, and an idempotent `POST /internal/sessions/get-or-create-by-external-id` endpoint and SDK method.
+- ecdadb2: Add caller-owned session `metadata` (`Record<string, string>` with size limits) on create, update, and read. Persist as a new `session.metadata` jsonb column; leave session `custom` unchanged.
+
 ## 0.2.0-rc.0
 
 ### 次要更改
