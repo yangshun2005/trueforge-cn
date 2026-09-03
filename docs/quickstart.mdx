@@ -1,0 +1,300 @@
+---
+title: 'Quickstart'
+sidebarTitle: 'Quickstart'
+description: 'Run TrueForge, connect a model and tools, and build your first reusable agent — step by step.'
+---
+
+## Run TrueForge
+
+TrueForge runs in [two modes](/introduction#two-ways-to-run-it): **local mode** — a single process on your machine, like a personal productivity tool — and **hosted mode** — a shared deployment for your team, with Postgres for storage and Redis for cross-replica peering. The agent features are identical in both.
+
+<Tabs>
+  <Tab title="npx (Local)">
+    Requires [Node.js](https://nodejs.org) 22.14 or newer. One command, no other infrastructure — the UI and backend run locally, and data is stored in a local SQLite file:
+
+    ```bash
+    npx @truefoundry/trueforge@latest
+    ```
+
+    Then open [http://localhost:8790](http://localhost:8790). The defaults work out of the box — see the [FAQ](#faq) to change the port or data location.
+
+    <Warning>
+      Local (standalone) mode is meant for personal use on your own machine. It is not a production or internet-facing
+      setup — there is no login by default, and data lives in a local SQLite file. Please keep it on localhost. We
+      cannot take responsibility for data loss or unauthorized access if local mode is used beyond that. For a shared
+      deployment, use hosted mode below.
+    </Warning>
+
+  </Tab>
+  <Tab title="Docker Compose (Hosted)">
+    Runs the full hosted topology on your machine: the server (UI + API), Postgres, and Redis.
+
+    ```bash
+    git clone https://github.com/truefoundry/trueforge && cd trueforge
+    cp packages/trueforge/.env.example packages/trueforge/.env
+    docker compose up --build
+    ```
+
+    Then open [http://localhost:8791](http://localhost:8791).
+
+    | Configuration                                         | Default                 | Description                                              |
+    | ----------------------------------------------------- | ----------------------- | -------------------------------------------------------- |
+    | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | from `.env`             | Postgres credentials, read from `packages/trueforge/.env`.  |
+    | <Tooltip tip="Public origin at which users and external services reach TrueForge (e.g. https://trueforge.myorg.com). The server uses it to build MCP OAuth and OIDC login callbacks." cta="See the FAQ" href="/quickstart#faq">`PUBLIC_BASE_URL`</Tooltip> | `http://localhost:8791` | Public origin, used for MCP OAuth callbacks.             |
+    | Host ports                                            | `8791`, `5433`, `6380`  | App, Postgres, and Redis.                                |
+
+  </Tab>
+  <Tab title="Kubernetes (Hosted)">
+    The Helm chart deploys the server in hosted mode with bundled Postgres and Redis (or point it at your own):
+
+    ```bash
+    helm install trueforge oci://tfy.jfrog.io/tfy-helm/trueforge \
+      --version <x.y.z>
+    ```
+
+    Find the version you want to install in the [published Helm charts](https://tfy.jfrog.io/ui/packages/oci:%2F%2Ftrueforge).
+
+    To expose TrueForge through an Istio gateway, save this `VirtualService` in
+    `values.yaml` under `extraObjects`. Replace the host and gateway with your
+    own values:
+
+    ```yaml
+    extraObjects:
+      - apiVersion: networking.istio.io/v1
+        kind: VirtualService
+        metadata:
+          name: '{{ include "trueforge.fullname" . }}'
+        spec:
+          hosts:
+            - trueforge.example.com
+          gateways:
+            - istio-system/public-gateway
+          http:
+            - route:
+                - destination:
+                    host: '{{ include "trueforge.fullname" . }}'
+                    port:
+                      name: http
+    ```
+
+    Then install the chart with the values file:
+
+    ```bash
+    helm install trueforge oci://tfy.jfrog.io/tfy-helm/trueforge \
+      --version <x.y.z> \
+      --values values.yaml
+    ```
+
+    | Value                  | Default | Description                                                             |
+    | ---------------------- | ------- | ------------------------------------------------------------------------ |
+    | `replicaCount`         | `1`     | Number of server replicas (peered over Redis).                           |
+    | `postgresql.enabled`   | `true`  | Bundle Postgres; set `false` + `externalPostgres.*` to bring your own.   |
+    | `redis.enabled`        | `true`  | Bundle Redis; set `false` + `externalRedis.url` (string or `valueFrom`). |
+    | `server.publicBaseUrl` | `""`    | Public origin; required for OIDC and MCP OAuth callbacks.                |
+    | `configs.oidc.enabled` | `false` | Enable IdP login via `configs.oidc.*`. Default off = shared local admin — see [chart README](https://github.com/truefoundry/trueforge/blob/main/charts/trueforge/README.md#dev-defaults-read-before-exposing). |
+
+  </Tab>
+  <Tab title="Railway (Hosted)">
+    Hosted topology on [Railway](https://railway.com) is defined with [Infrastructure as Code](https://docs.railway.com/infrastructure-as-code) in [`.railway/railway.ts`](https://github.com/truefoundry/trueforge/blob/main/.railway/railway.ts): one project with the server (UI + API), Postgres, and Redis. The app sets `RAILWAY_DOCKERFILE_PATH=Dockerfile.dev` so Railway builds the from-source image ([`Dockerfile.dev`](https://github.com/truefoundry/trueforge/blob/main/Dockerfile.dev)), and wires `DATABASE_URL`, `REDIS_URL`, and `PUBLIC_BASE_URL` in that file.
+
+    From a clone of this repo:
+
+    ```bash
+    pnpm install
+    railway login
+    railway init --name trueforge
+    railway config plan
+    railway config apply
+    railway domain
+    ```
+
+    `railway config apply` creates the three services and connects them. Generate a public domain on the `trueforge` service (CLI above or Settings → Networking), then open that URL.
+
+    <Warning>
+      Without [OIDC login](/authentication/overview), anyone who can reach the URL is admin. Enable login before sharing
+      a Railway deployment beyond personal use.
+    </Warning>
+
+    `STANDALONE=false` and `HOST=0.0.0.0` are baked into `Dockerfile.dev`. Railway injects `PORT` automatically.
+
+  </Tab>
+</Tabs>
+
+<Note>
+  Local mode (`npx`) uses SQLite and needs no other services. Docker Compose, Kubernetes, and Railway run hosted mode:
+  Postgres replaces SQLite as durable storage, and Redis peers the replicas so streams and cancellations follow the client
+  across them.
+</Note>
+
+## Build your first agent
+
+With TrueForge open in your browser, this walkthrough takes you from an empty workspace to a saved, reusable agent. The example builds a **web research briefer** — an agent that searches the web, fans out to parallel subagents, and turns its findings into an interactive one-page brief.
+
+<Steps>
+  <Step title="Add a model provider">
+    Open **Settings → Models**, find a provider in the catalog, and click **Configure**. Paste your API key in **Configure Provider Details** and click **Create** — the provider's models become available immediately.
+
+    <Columns cols={2}>
+      <Frame caption="Pick a provider from the catalog.">
+        ![Settings → Models listing providers such as OpenAI, Anthropic, and Google, each with a Configure button](/images/quickstart-models.png)
+      </Frame>
+      <Frame caption="Paste an API key and click Create.">
+        ![The Configure Provider Details dialog with an API key field and a collapsed Advanced custom endpoint section](/images/quickstart-model-configure.png)
+      </Frame>
+    </Columns>
+  </Step>
+
+  <Step title="Connect a web-search tool">
+    Open **Settings → Connectors** and add a [Model Context Protocol (MCP)](/mcp-servers) server — this is how your agent reaches external tools and data. TrueForge ships a catalog you can connect in one click; each entry shows its auth type (OAuth, an API key, or none), and you can register your own server by URL with **Add MCP Server**.
+
+    For this walkthrough, connect **Exa** — a web-search server that needs no authentication. Find it in the catalog and click **Connect**; it moves to **Configured**.
+
+    <Frame>
+      ![Settings → Connectors with Exa connected, above a catalog of more MCP servers labelled by auth type](/images/quickstart-connectors.png)
+    </Frame>
+  </Step>
+
+  <Step title="Add a skill">
+    Open **Settings → Skills**. A [skill](/skills) is a git-backed `SKILL.md` instruction pack the agent loads on demand. Enable one from the built-in list, or click **Import from GitHub** to add a skill from any public repository.
+
+    For this walkthrough, enable **web-artifacts-builder** from the built-in list — it lets the agent turn its findings into a self-contained, interactive web page. Click **Enable**; it moves to **Enabled**.
+
+    <Frame>
+      ![Settings → Skills with web-artifacts-builder enabled, above the built-in skill catalog](/images/quickstart-skill.png)
+    </Frame>
+  </Step>
+
+  <Step title="Add a sandbox provider">
+    A [sandbox](/sandbox) lets the agent run code, work with files, and use skills — so it's required for the skill you just enabled. TrueForge supports [Daytona](https://www.daytona.io) today. It's a one-time setup:
+
+    1. **Create a Daytona API key** with permission to write and delete snapshots and write sandboxes.
+    2. Open **Settings → Sandbox providers**, choose **Daytona**, click **Configure**, paste your API key, and click **Save**.
+
+    <Columns cols={2}>
+      <Frame caption="Paste your Daytona API key.">
+        ![The Configure Daytona dialog with an API key field and a collapsed Advanced settings section](/images/quickstart-sandbox-configure.png)
+      </Frame>
+      <Frame caption="Connected and ready.">
+        ![Settings → Sandbox providers showing Daytona as Connected](/images/quickstart-sandbox-connected.png)
+      </Frame>
+    </Columns>
+
+    See the [Sandbox guide](/sandbox) for provider setup details.
+  </Step>
+
+  <Step title="Compose an agent and start chatting">
+    Back in the chat, assemble the agent for this conversation. Pick a model from the selector in the composer, then open the **Tools** menu and set three things:
+
+    - **Connectors** — enable **Exa**.
+    - **Skills** — enable **web-artifacts-builder**.
+    - **Capabilities** — leave **Dynamic sub-agents** on (it's the default). This lets the agent research each item in parallel instead of one at a time.
+
+    <Tabs>
+      <Tab title="Connectors">
+        <Frame>
+          ![The composer Tools menu on the Connectors tab with Exa enabled](/images/quickstart-compose-connectors.png)
+        </Frame>
+      </Tab>
+      <Tab title="Skills">
+        <Frame>
+          ![The Tools menu on the Skills tab with web-artifacts-builder enabled](/images/quickstart-compose-skills.png)
+        </Frame>
+      </Tab>
+      <Tab title="Capabilities">
+        <Frame>
+          ![The Tools menu on the Capabilities tab with Generative UI, Dynamic sub-agents, and Ask clarifying questions toggled on](/images/quickstart-compose-capabilities.png)
+        </Frame>
+      </Tab>
+    </Tabs>
+
+    Then send your first message. For example:
+
+    ```text wrap
+    Research the current state of open-source vector databases. Compare Qdrant, Weaviate, and Milvus on performance, features, and licensing, then write a one-page brief with sources.
+    ```
+
+    The agent searches with Exa, delegates each database to a parallel subagent, and uses **web-artifacts-builder** in the sandbox to render an interactive brief.
+
+    <Frame caption="The result — an interactive brief the agent built from its web research: a comparison, feature chips, and a strengths chart.">
+      ![A chat result showing an interactive comparison of Qdrant, Weaviate, and Milvus with license badges, feature chips, Performance/Features/Licensing tabs, and a radar chart of relative strengths](/images/quickstart-chat-result.png)
+    </Frame>
+  </Step>
+
+  <Step title="Save it as an agent">
+    Happy with the setup? Click **Save Agent**, then in **Save agent** give it a name and instructions and click **Save changes** — this captures the model, connectors, skills, and prompt together as a reusable agent. For this example:
+
+    - **Name** — `web-research-brief`
+    - **Instructions** —
+
+    ```text wrap
+    You are a web research assistant. Given a topic or question, use Exa to search the web and pull content from the most relevant, recent sources. When the request compares several items, research each one in parallel, then synthesize the findings into a clear one-page brief.
+    ```
+
+    <Frame>
+      ![The Save agent dialog with a name, instructions, and a configuration summary of model, connectors, and skills](/images/save-agent.png)
+    </Frame>
+  </Step>
+
+  <Step title="Find it under Agents">
+    Open **Agents** from the sidebar. Your saved agent is there — click **Try** to start a fresh chat with the same setup, or **Edit** to tweak it. See [Agents](/agent-library) for shared-visibility notes in hosted mode.
+
+    <Frame>
+      ![Agents listing the saved web-research-brief agent with Edit and Try actions](/images/quickstart-agents-library.png)
+    </Frame>
+  </Step>
+</Steps>
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion title="How do I run the server on a different port?">
+    Pass `--port`, or set the `PORT` environment variable:
+
+    ```bash
+    npx @truefoundry/trueforge --port 3000
+    # or
+    PORT=3000 npx @truefoundry/trueforge
+    ```
+
+    In hosted mode, change the host port mappings in `docker-compose.yml` instead.
+
+  </Accordion>
+  <Accordion title="Where does local mode store its data?">
+    In a SQLite file in your OS's application data directory. To put it somewhere else, set the `SQLITE_PATH` environment variable:
+
+    ```bash
+    SQLITE_PATH=~/trueforge/db.sqlite npx @truefoundry/trueforge
+    ```
+
+  </Accordion>
+  <Accordion title="What is PUBLIC_BASE_URL and when do I need to set it?">
+    The public origin the server hands to MCP servers for OAuth callbacks. It defaults to `http://localhost:<port>`, which is correct as long as you access TrueForge from the same machine.
+
+    Set it when the server is reachable at a different address — behind a domain, reverse proxy, or on another host:
+
+    ```bash
+    PUBLIC_BASE_URL=https://trueforge.myorg.com npx @truefoundry/trueforge
+    ```
+
+    In hosted mode, set it in `packages/trueforge/.env` (Docker Compose), via `server.publicBaseUrl` (Helm), or as
+    `PUBLIC_BASE_URL=https://${{RAILWAY_PUBLIC_DOMAIN}}` on Railway.
+
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Initial Setup" icon="sliders" href="/harness/initial-setup">
+    Models, MCP servers, skills, sandbox — and how catalogs work.
+  </Card>
+  <Card title="Create an Agent" icon="robot" href="/create-agent/overview">
+    Select resources and configure approvals, questions, and Generative UI.
+  </Card>
+  <Card title="Harness Capabilities" icon="layer-group" href="/key-features/overview">
+    Subagents, deferred tools, code mode, compaction, and more.
+  </Card>
+  <Card title="SDK" icon="code" href="/api/quickstart">
+    Sessions, turns, events, and the agent spec.
+  </Card>
+</CardGroup>

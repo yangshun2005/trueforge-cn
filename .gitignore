@@ -1,0 +1,40 @@
+node_modules/
+dist/
+*.tgz
+!vendor/*.tgz
+.DS_Store
+*.log
+coverage/
+.turbo/
+*.tsbuildinfo
+.pnpm-store/
+.eslintcache
+.prettiercache
+packages/trueforge-core/src/core/sandbox/sandboxScripts.gen.ts
+packages/trueforge/src/catalog/modelCatalog.gen.ts
+packages/trueforge/src/catalog/mcpCatalog.gen.ts
+packages/trueforge/src/catalog/skillCatalog.gen.ts
+packages/trueforge/src/catalog/sandboxCatalog.gen.ts
+packages/trueforge/src/sandbox/local/sandboxScripts.gen.ts
+data/
+# Helm subchart deps are fetched via `helm dependency build` (pinned by the
+# committed Chart.lock); the downloaded .tgz/dirs are not committed.
+charts/*/charts/
+
+# Secrets / local env (keep committed examples and the unit-test env fixture)
+.env
+.env.*
+!.env.example
+!.env.test
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+credentials.json
+service-account*.json
+.aws/
+
+# Local Cursor scratch (committed rules under .cursor/rules/ stay tracked)
+.cursor/notes/
+.cursor/plans/

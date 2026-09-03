@@ -1,0 +1,265 @@
+# Default values for the trueforge chart.
+
+image:
+  repository: tfy.jfrog.io/tfy-images/trueforge
+  # Tag defaults to chart appVersion when empty. Prod chart-release PRs set this
+  # to {appVersion}-{shortSha} for the npm-install image already in the registry.
+  tag: "0.2.0-rc.0-8e9f92d"
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+# Default tfy.jfrog.io repos are anonymously pullable. Set secrets only when
+# overriding image.repository / subchart registries to a private registry.
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount:
+  create: true
+  annotations: {}
+  # If empty and create is true, a name is generated from the fullname.
+  name: ""
+podAnnotations: {}
+podLabels: {}
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+# Optional PriorityClass for the server pods.
+priorityClassName: ""
+
+service:
+  type: ClusterIP
+  port: 8790
+  annotations: {}
+  labels: {}
+# Server runtime configuration. Keys map to environment variables read in
+# packages/trueforge/src/config.ts.
+server:
+  # Number of server replicas (ignored when autoscaling.enabled is true).
+  replicaCount: 1
+  # Rolling update strategy for the server Deployment.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  # Container port the server listens on (PORT).
+  port: 8790
+  # Public origin for MCP OAuth / OIDC callbacks (PUBLIC_BASE_URL).
+  # Required for OIDC and MCP OAuth to work correctly.
+  publicBaseUrl: ""
+  # Seconds the server is given to drain turns on SIGTERM (GRACEFUL_TIMEOUT_SECONDS).
+  gracefulTimeoutSeconds: 30
+  # The server always runs peered (STANDALONE=false) against Postgres + Redis.
+  # Escape hatch for knobs not covered by configs.*. Each entry is a full env
+  # item: {name, value} or {name, valueFrom: {secretKeyRef|configMapKeyRef: ...}}.
+  extraEnv: []
+# Schedule controller. A dedicated, single-replica Deployment that runs the
+# periodic control loops (schedule dispatch). It MUST run as exactly one replica
+# per database, so it is never autoscaled. It calls the server API over HTTP and
+# reuses the server's Postgres/Redis env; it exposes no port and no Service.
+controller:
+  # Set false to skip the controller Deployment (schedules will not fire).
+  enabled: true
+  # Container command. Runs the controller entry from the published package inside
+  # the image (root Dockerfile layout: /app/node_modules/@truefoundry/trueforge).
+  command:
+    - node
+    - node_modules/@truefoundry/trueforge/dist/controller-main.js
+  # Base URL the controller uses to reach the server (SERVER_URL).
+  # Empty → the in-cluster server Service (http://<fullname>:<service.port>).
+  serverUrl: ""
+  # Extra env for the controller only; same item shape as server.extraEnv.
+  extraEnv: []
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+      ephemeral-storage: 128Mi
+    limits:
+      cpu: 100m
+      memory: 256Mi
+      ephemeral-storage: 256Mi
+# Application feature config (maps to env vars in packages/trueforge/src/config.ts).
+# clientSecret (and other secret-like fields) accept a string or
+# { valueFrom: { secretKeyRef: ... } }.
+configs:
+  oidc:
+    # Dev default: false → no OIDC_* env; fixed local admin identity
+    # (trueforge-default). Anyone who can reach the API/UI is admin.
+    # Enable for any shared or public deployment.
+    enabled: false
+    issuerUrl: ""
+    clientId: ""
+    # string or valueFrom.secretKeyRef (prefer valueFrom in production).
+    clientSecret: ""
+    # clientSecret:
+    #   valueFrom:
+    #     secretKeyRef:
+    #       name: trueforge-oidc
+    #       key: client-secret
+    userReferenceClaim: sub
+    userDisplayNameClaim: name
+    userRoleClaim: groups
+    adminRoleValue: admin
+    scopes: "openid,profile,email"
+    # Optional comma-separated exact emails and/or * globs (e.g. "*@company.com").
+    # Empty = unrestricted. Matched against the ID token `email` claim.
+    allowedEmails: ""
+# Bitnami relocated its versioned container images to docker.io/bitnamilegacy and
+# left only rolling `latest` tags under docker.io/bitnami, so the subchart image
+# defaults no longer pull. We source pinned legacy images from the TrueFoundry
+# JFrog mirror instead. Overriding the registry trips Bitnami's image guardrail,
+# so allowInsecureImages must be set for the subcharts to render.
+global:
+  security:
+    allowInsecureImages: true
+# --- Bundled Postgres (Bitnami subchart) ---------------------------------------
+# Rendered only when postgresql.enabled is true. The server's POSTGRES_* env is
+# wired to this release automatically. See the Bitnami postgresql chart for the
+# full set of tunables.
+postgresql:
+  enabled: true
+  architecture: standalone
+  # Pinned legacy image mirrored to JFrog (upstream docker.io/bitnami no longer
+  # serves this tag). Bump alongside the postgresql subchart version.
+  image:
+    registry: tfy.jfrog.io
+    repository: tfy-mirror/bitnamilegacy/postgresql
+    tag: 17.6.0-debian-12-r4
+  auth:
+    username: trueforge
+    database: trueforge
+    # Dev default password (publicly known). Before any shared/public deploy,
+    # set a strong password or reference a Secret via `existingSecret`
+    # (Bitnami reads the user password from key `password`).
+    password: trueforge
+    existingSecret: ""
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+# --- Bundled Redis (Bitnami subchart) ------------------------------------------
+# Rendered only when redis.enabled is true. Auth is disabled (dev default) so
+# REDIS_URL is a plain redis://host:6379. Safe only while Redis stays inside
+# the cluster trust boundary. For passworded Redis, disable the subchart and
+# use externalRedis with a Secret.
+redis:
+  enabled: true
+  architecture: standalone
+  # The redis 24.0.0 subchart floats `latest`; pin a legacy tag mirrored to JFrog
+  # for reproducibility (bitnamilegacy has no 8.4.x, so we track 8.2.x here).
+  image:
+    registry: tfy.jfrog.io
+    repository: tfy-mirror/bitnamilegacy/redis
+    tag: 8.2.1-debian-12-r0
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: false
+# --- External services (used when the matching bundled dependency is disabled) -
+externalPostgres:
+  host: ""
+  port: 5432
+  database: trueforge
+  user: trueforge
+  # string, or { valueFrom: { secretKeyRef: { name, key } } }. Prefer valueFrom in prod.
+  password: ""
+  # password:
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: my-postgres-secret
+  #       key: password
+externalRedis:
+  # Full connection URL, e.g. redis://:password@redis-master.databases.svc:6379.
+  # string, or { valueFrom: { secretKeyRef: { name, key } } }. Prefer valueFrom in prod.
+  url: ""
+  # url:
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: my-redis-secret
+  #       key: redis-url
+# Extra raw manifests deployed alongside the server, e.g. an Istio
+# VirtualService, a Gateway, an Ingress, or a NetworkPolicy. Each entry is a
+# full Kubernetes object rendered through `tpl`, so Helm templating works and
+# helpers like `{{ include "trueforge.fullname" . }}` resolve. Example:
+#
+# extraObjects:
+#   - apiVersion: networking.istio.io/v1
+#     kind: VirtualService
+#     metadata:
+#       name: '{{ include "trueforge.fullname" . }}'
+#     spec:
+#       hosts:
+#         - trueforge.example.com
+#       gateways:
+#         - istio-system/public-gateway
+#       http:
+#         - route:
+#             - destination:
+#                 host: '{{ include "trueforge.fullname" . }}'
+#                 port:
+#                   number: '{{ .Values.service.port }}'
+extraObjects: []
+# Init containers and sidecar containers (full container specs).
+initContainers: []
+extraContainers: []
+# Extra volumes / mounts on the server container (e.g. CA bundles, projected tokens).
+extraVolumes: []
+extraVolumeMounts: []
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+    ephemeral-storage: 256Mi
+  limits:
+    cpu: 200m
+    memory: 512Mi
+    ephemeral-storage: 512Mi
+# startupProbe runs until success before liveness/readiness; sized for migrate + Redis connect.
+startupProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 30
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+podDisruptionBudget:
+  enabled: false
+  # Exactly one of minAvailable or maxUnavailable is required when enabled.
+  # Default keeps at least one pod available during voluntary disruptions.
+  minAvailable: 1
+  maxUnavailable: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}
+topologySpreadConstraints: []

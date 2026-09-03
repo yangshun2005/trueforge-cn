@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://trueforge.dev
+    about: Guides, configuration reference, and API docs.
+  - name: Security vulnerability
+    url: https://github.com/truefoundry/trueforge/security/advisories/new
+    about: Please report security issues privately — see SECURITY.md.

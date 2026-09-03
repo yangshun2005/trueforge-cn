@@ -1,0 +1,61 @@
+---
+title: 'Setup MCP Servers'
+sidebarTitle: 'MCP Servers'
+description: 'Connect remote MCP servers from the shipped catalog or your own URL — with header auth or OAuth.'
+---
+
+MCP servers are how your agent reaches real systems: SaaS apps, internal APIs, data platforms, ticketing tools, and infrastructure controls.
+
+Register them once under **Settings → Connectors**. Agents attach servers by name. Credentials live in the connector configuration, never in agent definitions.
+
+## Connecting a server
+
+Open **Settings → Connectors**, pick a server from the catalog, complete auth if required, and save. The server is then available when you [create an agent](/create-agent/overview).
+
+<Frame caption="Settings → Connectors — connect a server from the catalog (each shows its auth type).">
+  <img src="/images/mcp-connectors.png" alt="The Settings → Connectors page showing a connected server above a catalog of MCP servers labelled by auth type" />
+</Frame>
+
+You can also use **Add MCP Server** to register any remote URL that is not in the catalog.
+
+<div style={{ position: "relative", boxSizing: "content-box", width: "100%", aspectRatio: "1.75", padding: "40px 0" }}>
+  <iframe
+    src="https://app.supademo.com/embed/cmsk7ca2801l91t0jwyiwj78i?embed_v=2&utm_source=embed"
+    loading="lazy"
+    title="Register a remote MCP server in TrueForge"
+    allow="clipboard-write"
+    allowFullScreen
+    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
+  />
+</div>
+
+The catalog entries under **Settings → Connectors** (Linear, Notion, GitHub, and others) come from the shipped MCP catalog — see [Initial Setup](/harness/initial-setup#what-is-supported-out-of-the-box) for how catalogs work and how to change what the UI offers.
+
+## Authentication options
+
+- **No auth** — public or network-trusted servers.
+- **Header auth** — static HTTP headers (API keys, bearer tokens) sent on every request.
+- **OAuth (Dynamic Client Registration)** — TrueForge registers as an OAuth client, runs the authorization-code flow, and stores and refreshes tokens. Users never paste tokens into the agent.
+
+<Info>
+  For OAuth to work, the MCP server must redirect the user back to your TrueForge instance — so the server needs to
+  know its own public address. That is the `PUBLIC_BASE_URL` environment variable. It defaults to
+  `http://localhost:<port>`, which is fine on your own machine; set it whenever TrueForge is reached at a different
+  address (a domain, reverse proxy, or another host). Where to set it depends on how you run TrueForge — as an env var
+  for `npx`, in `packages/trueforge/.env` for Docker Compose, or `server.publicBaseUrl` for Helm. See the
+  [Quickstart FAQ](/quickstart#faq).
+</Info>
+
+## In-chat authentication
+
+If a server uses OAuth and the user has not yet authorized it, the turn pauses and the chat UI shows a **Connect** button. The user completes OAuth in a popup and continues the conversation — the agent does not fail.
+
+<Frame caption="In-chat MCP authentication — the turn pauses with a Connect button until the user authorizes the server, then continues.">
+  <img src="/images/mcp-in-chat-auth.png" alt="The chat UI showing an MCP Authentication Required panel for the Notion server, with Connect and Continue buttons" />
+</Frame>
+
+## Next steps
+
+- Attach MCP servers when you [create an agent](/create-agent/overview).
+- Configure which tools need [approval](/create-agent/overview#whats-in-an-agent) (API today).
+- Keep tool schemas lean with [deferred loading](/key-features/deferred-tool-loading) in Harness Capabilities.

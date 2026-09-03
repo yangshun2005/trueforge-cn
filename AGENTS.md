@@ -1,0 +1,24 @@
+# AGENTS.md
+
+- 工作区任务必须使用 `package.json` 脚本；当缺失的工作流与现有命令一样可重复时，应添加脚本，而非临时命令。
+- 当工作区包被添加、重命名或移动时，CI 包路径过滤器、矩阵包 ID 以及 `.github/workflows/ci.yml` 和根目录 `package.json` 中的根脚本 `test:*` 必须保持同步；`store` 过滤器同步规则位于 `packages/trueforge-core/src/agent-session/store/AGENTS.md`。
+- 发布接线必须保证 `@truefoundry/trueforge-core` 和 `@truefoundry/trueforge-sdk` 的无 dist 主机开发、`pnpm smoke` 以及打包后的 CJS/ESM 消费者无需更改即可正常工作。工作区加载器通过 `trueforge-dev` 导出条件（绝不使用 `"development"`）选择加入 SDK/core 的 `src/`；SDK 的 `trueforge-dev` 分支必须在其生成的 `.d.ts`（由根目录 `sdk:types` 生成）上保留 `types`，因为生成的源码不满足 `exactOptionalPropertyTypes` 的清洁要求。
+- 修改已发布包代码（`packages/trueforge-core`、`packages/trueforge`、`packages/trueforge-ui`、`packages/trueforge-sdk`）或 `packages/frontend`（随 `@truefoundry/trueforge` 一起发布）的 PR 必须包含一个新的 `.changeset/*.md` 文件（通过 `pnpm changeset` 生成）。文档、CI/工作流、charts 和 docker-compose 的更改则不需要。SDK 重新生成已通过 `pnpm changeset:sdk-regen` 添加 `@truefoundry/trueforge-sdk`。
+- `docker-compose.yml` 和 `docker-compose.dev.yml` 中共享的 Postgres/Redis 设置（镜像版本、健康检查、`env_file`）必须保持同步；有意的差异（应用服务、数据路径、项目 `name`、主机端口、网络内 `POSTGRES_HOST` / `REDIS_URL`）必须保持明确。`packages/trueforge/.env` 是主机开发 + 密钥的来源；`docker-compose.yml` 可以读取它，但必须覆盖容器连接性，以便在 smoke-test 栈中不使用主机开发的 localhost 值。
+- 对类型或 Schema 的更改必须保持 `packages/trueforge-core`、`packages/frontend`、`packages/trueforge` 和 `patches` 的同步；不得只更新其中一个受影响的层。
+- TypeScript 代码不得使用断言逃逸（如 `as T`、`as unknown as T`、非空 `!` 或 `as never`）来消除类型错误；实现必须使用合理的契约、守卫或修正后的类型。
+- 当捕获一个错误并抛出另一个错误时，新错误必须设置 `{ cause: caught }`，以便保留原始失败信息用于日志记录和调试。
+- 每个类型、Schema、辅助函数和契约必须有一个唯一的规范所有者；代码不得引入重复定义或隐藏所有权的转发垫片。
+- AgentUIServer / 服务器端口类型（`AgentChatServer`、`AgentBuilderServer`、目录端口、会话/轮次 DTO、流事件）必须仅在 `@truefoundry/assistant-ui-runtime`（`src/server/types.ts` / `events.ts`）中定义。`@truefoundry/trueforge-ui` 必须从 `src/server/types.ts` 重新导出它们（仅限透传别名），且不得添加这些端口/DTO 的手写并行定义。
+- 由 Zod Schema 支持的运行时类型必须使用命名的 `z.infer<typeof Schema>` 别名派生；代码不得将这些 Schema 复制为手写接口或间接工具类型链。
+- 模块必须使用静态 `import` 和 `import type`；不得使用 `require()`、`require.resolve()` 或 lint 抑制来绕过导入检查。
+- 使代码不再使用的更改必须在同一更改中删除该死代码；不得留下过期的导出、文件、文档、重复内容或“以防万一”的垫片。
+- 注释必须解释意图、权衡或约束，并保持简洁；不得重述代码或包含 Issue 跟踪器 ID。
+- 每个嵌套的 `AGENTS.md` 必须有一个仅包含 `@AGENTS.md` 的同级 `CLAUDE.md`，以便 Cursor 和 Claude Code 加载相同的作用域规则。
+- `.github/fern/openapi/openapi.json` 和 `docs/openapi.json` 下的 OpenAPI 规范由 CI 自动生成，不得手动编辑（两份副本必须保持完全相同）。
+- `packages/trueforge-sdk` 下的代码由 CI 自动生成，不得手动编辑。
+- 测试必须位于包顶层的 `test` 或 `tests` 目录下，并镜像 `src` 的布局；不得内联在 `src` 下。
+- 具有多个相同类型参数的函数必须接受单个 options 对象（例如 `f({ a, b }: { a: string; b: string })`）；不得使用该重复类型的多个位置参数（例如 `f(a: string, b: string)`）。
+- 当每个成员都带有共享的字面量判别字段时，Zod 联合必须使用 `z.discriminatedUnion`；仅当不存在此类公共判别字段时才允许使用 `z.union`。
+- HTTP/OpenAPI 线上形态（路径参数、查询参数、请求/响应 JSON 字段）和数据库标识符（表/列名、持久化的 jsonb 文档键）必须使用 `snake_case`。
+- 服务器代码不得直接通过 `process.env` 读取环境变量；所有环境变量读取必须通过 `packages/trueforge/src/config.ts`，除非有文档化的特殊要求（例如在配置加载之前进行引导）。

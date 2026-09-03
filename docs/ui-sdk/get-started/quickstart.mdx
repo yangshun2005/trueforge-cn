@@ -1,0 +1,53 @@
+---
+title: "Quickstart"
+description: "Render a working agent chat UI against a TrueForge server"
+---
+
+## Installation
+
+<CodeGroup>
+
+```shellscript npm
+npm install @truefoundry/trueforge-ui @truefoundry/trueforge-sdk
+```
+
+```text pnpm
+pnpm add @truefoundry/trueforge-ui @truefoundry/trueforge-sdk
+```
+
+```text yarn
+yarn add @truefoundry/trueforge-ui @truefoundry/trueforge-sdk
+```
+
+</CodeGroup>
+
+`react` and `react-dom` are required peer dependencies (version 18 or 19).
+
+## Render the UI
+
+Point `TrueForgeUI` at your TrueForge server:
+
+```tsx App.tsx
+import { TrueForgeUI } from "@truefoundry/trueforge-ui";
+
+export default function App() {
+  return (
+    <div style={{ height: "100dvh" }}>
+      <TrueForgeUI
+        server={{
+          type: "trueforge",
+          baseUrl: "http://localhost:8790",
+          // token: "<bearer token>", // only if the server has OIDC login enabled
+        }}
+        layout="sidebar"
+      />
+    </div>
+  );
+}
+```
+
+`baseUrl` is your harness API root (defaults to `/` for same-origin). Add `token` — a Bearer token for the SDK — only when the server has OIDC login enabled. That is enough to get a full agent chat with streaming, history, and tool calls.
+
+<Frame caption="What `TrueForgeUI` renders — a full agent chat with streaming, history, and tool calls.">
+  ![The TrueForgeUI component rendering an agent chat with an agent-steps panel and a streamed response](/images/agent-composer-with-library.png)
+</Frame>

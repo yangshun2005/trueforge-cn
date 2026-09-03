@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.changeset/
+# Fern-generated: formatted by the generator, not by this repo's config.
+packages/trueforge-sdk/
+.github/fern/openapi/
+# Ignore generated openapi.json in docs
+docs/openapi.json
+# Helm chart sources and downloaded Bitnami subcharts; not ours to reformat.
+charts/
+coverage/
+# Prettier's markdown parser escapes `*` inside MDX `{/* */}` comments, breaking MDX parsing.
+*.mdx
+.turbo/
+pnpm-lock.yaml
+*.tsbuildinfo

@@ -1,0 +1,2 @@
+- JSON 投影别名必须列在 `client.ts` 的 `JSON_RESULT_COLUMNS` 中。
+- Kysely 的 SqliteAdapter 保持 `supportsTransactionalDdl: false`，因此 Migrator 不会包装迁移。每个涉及 schema 的 `up`/`down` 必须自行开启 `db.transaction()`。`PRAGMA foreign_keys` 在事务内部是无效操作——在重建被引用的父表时，应在事务外部切换它（参见 kysely#56）。

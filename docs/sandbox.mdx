@@ -1,0 +1,73 @@
+---
+title: 'Setup Sandbox'
+sidebarTitle: 'Sandbox'
+description: 'Connect an isolated execution environment for code, files, and shell commands — provisioned only when the agent needs one.'
+---
+
+The sandbox gives your agent a secure, isolated environment to run code, manipulate files, and execute shell commands — separate from the TrueForge server and your infrastructure.
+
+Skills and [Code Mode](/key-features/code-mode) require a sandbox. Configure a provider once under **Settings → Sandbox providers**, then enable the sandbox on each agent that needs it.
+
+## TrueForge's approach
+
+There are two common patterns for combining agents with sandboxes:
+
+| Pattern | Where the agent runs | Trade-off |
+| --- | --- | --- |
+| **Agent in sandbox** | Inside the sandbox image | Sandbox is provisioned even for the simplest request; secrets must live in the sandbox; updates mean rebuilding images |
+| **Sandbox as tool** | Outside, on the server | Sandbox is provisioned on demand when needed; secrets stay in the harness; sandbox is only for exec/files |
+
+TrueForge uses **sandbox as tool**: the agent loop and credentials stay in the harness; the sandbox only runs code, file, and shell operations.
+
+That means:
+
+- Model and MCP credentials never enter the sandbox.
+- Conversation state survives a sandbox crash.
+- A sandbox is created only when the agent actually needs one — simple Q&A and MCP calls incur no sandbox cost.
+
+## Configuring a provider
+
+**Daytona is the only sandbox provider supported today.** Support for additional providers is planned.
+
+Open **Settings → Sandbox providers**, pick the [Daytona](https://www.daytona.io) preset from the catalog, and paste your API key.
+
+<Note>
+  The Daytona API key needs permission to create **snapshots**, not only sandboxes. The first time you configure the
+  provider, TrueForge builds a release snapshot in your Daytona account, and every sandbox it starts afterwards is
+  cloned from that snapshot. Create the key with **Sandboxes** access and **Snapshots** write (create) permission.
+
+  If the key is missing snapshot permission, configuring the provider fails 
+  even though the key is otherwise valid. If you hit that, check the key's permissions before regenerating it.
+</Note>
+
+<div style={{ position: "relative", boxSizing: "content-box", width: "100%", aspectRatio: "1.75", padding: "40px 0" }}>
+  <iframe
+    src="https://app.supademo.com/embed/cmsk7vatl00pz0n0jme1d96w5?embed_v=2&utm_source=embed"
+    loading="lazy"
+    title="Configure a sandbox provider in TrueForge"
+    allow="clipboard-write"
+    allowFullScreen
+    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
+  />
+</div>
+
+The provider presets come from the shipped sandbox catalog — see [Initial Setup](/harness/initial-setup#what-is-supported-out-of-the-box) for how catalogs work and how to change what the UI offers.
+
+## Enabling the sandbox on an agent
+
+The sandbox is **off by default** per agent. Turn it on in the agent builder when you need code execution, skills, or Code Mode. You can also set `config.sandbox.enabled` in the [agent spec](/create-agent/overview#config) when creating agents via the SDK.
+
+Optional controls:
+
+- **File downloads** — let users download files the agent produces (on by default in the chat UI).
+
+## Lifecycle
+
+- Provisioned on demand when the agent needs code, files, skills, or Code Mode.
+- Reused across turns in the same session (files persist).
+- Stopped after idle time, then archived and eventually deleted per the provider settings.
+
+## Credential safety
+
+- Model and MCP credentials stay in the harness.
+- MCP calls from [Code Mode](/key-features/code-mode) scripts are bridged back to the harness — the sandbox never holds those tokens.

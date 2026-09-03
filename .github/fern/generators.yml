@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=https://schema.buildwithfern.dev/generators-yml.json
+#
+# openapi/openapi.json is committed by `pnpm openapi:write`, so Fern never needs the server.
+readme:
+  apiName: TrueForge
+  introduction: >
+    TypeScript client for the TrueForge Agent Harness Server: a self-hosted
+    runtime that executes agent turns and streams them over Server-Sent Events.
+
+
+    When auth is enabled on the server, pass an ID token via the optional
+    `token` client option (`Authorization: Bearer`).
+  apiReferenceLink: https://trueforge.dev/api/use-agent
+  # Fern keys this lookup on the stream flag, so the string form misses and fails.
+  defaultEndpoint:
+    method: POST
+    path: /api/v1/sessions/{session_id}/turns
+    stream: true
+api:
+  specs:
+    - openapi: openapi/openapi.json
+      settings:
+        title-as-schema-name: false
+        prefer-undiscriminated-unions-with-literals: true
+        only-include-referenced-schemas: true
+        type-dates-as-strings: true
+        object-query-parameters: false
+        idiomatic-request-names: true
+        respect-nullable-schemas: true
+        wrap-references-to-nullable-in-optional: false
+        coerce-optional-schemas-to-nullable: false
+        inline-path-parameters: false
+        coerce-enums-to-literals: true
+        respect-forward-compatible-enums: true
+groups:
+  # `local-file-system` allows no `github` block, so the workflow commits the result itself.
+  ts-sdk:
+    generators:
+      - name: fernapi/fern-typescript-node-sdk
+        version: 3.88.3
+        output:
+          location: local-file-system
+          path: ../../packages/trueforge-sdk
+        config:
+          packageJson:
+            name: '@truefoundry/trueforge-sdk'
+            license: MIT
+            author: TrueForge
+            repository:
+              type: git
+              url: git+https://github.com/truefoundry/trueforge.git
+              directory: packages/trueforge-sdk
+            homepage: https://github.com/truefoundry/trueforge/tree/main/packages/trueforge-sdk#readme
+            bugs:
+              url: https://github.com/truefoundry/trueforge/issues
+            publishConfig:
+              access: public
+              provenance: true
+            engines:
+              node: '>=22'
+            # Merged onto Fern's dist import/require map. Workspace loaders opt in
+            # with --conditions=trueforge-dev / customConditions. Never name this
+            # "development" (Vite/webpack auto-activate it; src/ is not published).
+            #
+            # Runtime loads src/ (no build); types stay on the generated .d.ts.
+            # Generated source is not exactOptionalPropertyTypes-clean, and pointing
+            # `types` at src/ would pull it into every consumer's tsc program.
+            exports:
+              ".":
+                "trueforge-dev":
+                  types: "./dist/cjs/index.d.ts"
+                  default: "./src/index.ts"
+                import:
+                  types: "./dist/esm/index.d.mts"
+                  default: "./dist/esm/index.mjs"
+                require:
+                  types: "./dist/cjs/index.d.ts"
+                  default: "./dist/cjs/index.js"
+                default: "./dist/cjs/index.js"
+          allowExtraFields: true
+          allowCustomFetcher: true
+          enableInlineTypes: false
+          fetchSupport: native
+          fileResponseType: binary-response
+          formDataSupport: Node18
+          includeApiReference: true
+          inlineFileProperties: true
+          inlinePathParameters: true
+          naming:
+            namespace: TrueForge
+            client: TrueForge
+          noSerdeLayer: false
+          omitUndefined: true
+          optional-auth: true
+          requireBaseUrl: true
+          retainOriginalCasing: false
+          skipResponseValidation: true
+          streamType: web
+          useDefaultRequestParameterValues: true
+        smart-casing: true

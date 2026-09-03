@@ -1,0 +1,16 @@
+**/node_modules
+**/dist
+**/coverage
+**/.turbo
+**/*.tsbuildinfo
+.git
+.github
+.husky
+.eslintcache
+.pnpm-store
+**/*.log
+**/.DS_Store
+**/.env
+Dockerfile
+docker-compose.yml
+.dockerignore

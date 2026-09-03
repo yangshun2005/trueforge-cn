@@ -1,0 +1,3 @@
+- `ISessionStore` 是会话/回合持久化契约（不支持流式/SSE）；Postgres、SQLite 和 `InMemorySessionStore` 必须实现它，且共享行为必须放在 `storeContractSuite.ts` 中（后端包装器仅绑定存储）。
+- 更改 `ISessionStore` 的方法、输入、错误或语义时，必须在同一变更中更新接口、所有实现以及契约测试套件。
+- 当存储或契约测试路径被添加、移动或重命名时，`.github/workflows/ci.yml` 中 `store` 过滤器的路径过滤器必须保持同步。

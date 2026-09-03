@@ -1,0 +1,137 @@
+{
+  "$schema": "https://mintlify.com",
+  "theme": "mint",
+  "redirects": [
+    { "source": "/api/turn-events", "destination": "/api/use-agent#turn-events-reference" },
+    { "source": "/create-agent/tool-approval", "destination": "/create-agent/overview#whats-in-an-agent" },
+    { "source": "/create-agent/ask-user-questions", "destination": "/create-agent/overview#whats-in-an-agent" },
+    { "source": "/create-agent/generative-ui", "destination": "/create-agent/overview#whats-in-an-agent" },
+    { "source": "/create-agent/agent-spec", "destination": "/create-agent/overview#create-an-agent-via-the-api" }
+  ],
+  "name": "TrueForge",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://trueforge.dev"
+  },
+  "favicon": {
+    "light": "/logo/favicon-light.svg",
+    "dark": "/logo/favicon-dark.svg"
+  },
+  "description": "Open-source agent harness — MCP tools, skills, sandboxing, approvals, and subagents.",
+  "colors": {
+    "primary": "#4f46e5",
+    "light": "#4f46e5",
+    "dark": "#4f46e5"
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "https://example.com"
+    }
+  ],
+  "appearance": {
+    "default": "system"
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": ["introduction", "quickstart"]
+          },
+          {
+            "group": "TrueForge Harness",
+            "pages": [
+              {
+                "group": "Initial Setup",
+                "pages": ["harness/initial-setup", "models", "mcp-servers", "skills", "sandbox"]
+              },
+              "create-agent/overview",
+              "agent-library",
+              {
+                "group": "Harness Capabilities",
+                "pages": [
+                  "key-features/overview",
+                  "key-features/subagents",
+                  "key-features/deferred-tool-loading",
+                  "key-features/code-mode",
+                  "key-features/large-tool-responses"
+                ]
+              },
+              "authentication/overview",
+              "benchmarking"
+            ]
+          },
+          {
+            "group": "SDK",
+            "pages": ["api/quickstart", "api/overview", "api/use-agent"]
+          },
+          {
+            "group": "UI Chat",
+            "pages": [
+              "chat-ui",
+              "ui-sdk/get-started/quickstart",
+              {
+                "group": "Frontend Customisation",
+                "pages": [
+                  "ui-sdk/guides/layouts-and-theme",
+                  "ui-sdk/guides/agent-modes",
+                  "ui-sdk/setup-custom-ui/custom-theme",
+                  "ui-sdk/guides/troubleshooting"
+                ]
+              },
+              {
+                "group": "API reference",
+                "pages": [
+                  "ui-sdk/reference/trueforge-ui",
+                  "ui-sdk/reference/theme",
+                  "ui-sdk/reference/containers",
+                  "ui-sdk/reference/atoms",
+                  "ui-sdk/reference/hooks",
+                  "ui-sdk/reference/server",
+                  "ui-sdk/reference/events",
+                  "ui-sdk/reference/catalog"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Project",
+            "pages": ["roadmap"]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "openapi": {
+          "source": "./openapi.json",
+          "directory": "api-reference"
+        }
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/truefoundry/trueforge",
+        "icon": "github"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "TrueFoundry",
+      "href": "https://www.truefoundry.com"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/truefoundry",
+      "x": "https://x.com/truefoundry",
+      "linkedin": "https://in.linkedin.com/company/truefoundry"
+    }
+  }
+}

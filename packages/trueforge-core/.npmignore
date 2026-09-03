@@ -1,0 +1,5 @@
+# Never ship docs to the npm registry page / tarball.
+README*
+readme*
+*.md
+**/*.md

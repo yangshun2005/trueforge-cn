@@ -1,0 +1,187 @@
+---
+title: "Layout, Theming & Branding"
+description: "Layout, Presets themes, Branding, and Dark mode."
+---
+
+## Preset Layouts
+
+The sidebar view is the default layout. You can customize the layout by passing one of the predefined options: sidebar, drawer, dock, or widget.
+
+<Tabs>
+  <Tab title="sidebar(default)">
+    A full-page chat experience with persistent conversation history in a left sidebar. The default choice for a dedicated chat surface.
+
+    ```tsx
+    <TrueForgeUI server={server} layout="sidebar" />
+    ```
+
+    <Frame caption="Sidebar: full-page chat with the thread list pinned on the left.">
+      ![Sidebar layout — a persistent thread list on the left beside a full-page chat](/images/sidebar.png)
+    </Frame>
+  </Tab>
+  <Tab title="drawer">
+    Chat history is tucked into an overlay drawer and can be opened using the history icon. Ideal for smaller viewports, such as tablets and compact monitors, where screen space is limited.
+
+    ```tsx
+    <TrueForgeUI server={server} layout="drawer" />
+    ```
+
+    <Frame caption="Drawer: the thread list collapses into an overlay for narrow viewports.">
+      ![Drawer layout — the thread list collapsed into an overlay drawer](/images/drawer.png)
+    </Frame>
+  </Tab>
+  <Tab title="dock">
+    A chat panel pinned to the right edge, using the available space up to a maximum width of 400px.
+
+    ```tsx
+    <TrueForgeUI server={server} layout="dock" />
+    ```
+
+    <Frame caption="Dock: a compact panel pinned to the right edge, up to a 400px cap.">
+      ![Dock layout — a compact chat panel pinned to the right edge of the app](/images/dock.png)
+    </Frame>
+  </Tab>
+  <Tab title="widget">
+    A floating chat launcher that expands into a compact chat panel when opened.
+
+    ```tsx
+    <TrueForgeUI server={server} layout="widget" />
+    ```
+
+    <Frame caption="Widget: a floating launcher that expands into a compact chat panel.">
+      ![Widget layout — a floating launcher expanded into a compact chat panel](/images/widget.png)
+    </Frame>
+  </Tab>
+</Tabs>
+
+Built-in layouts are code-split, so only the layout you use is loaded into your bundle. The other three layouts are excluded, keeping your bundle size smaller. A lightweight placeholder is displayed while the selected layout loads.
+
+## Preset Themes
+
+Choose from four built-in themes - Claude, ChatGPT, Gemini, and TrueForge, or create a [custom theme](../setup-custom-ui/custom-theme) to match your brand.
+
+## The theme object
+
+```ts
+type BrandImage = string | { src?: string; light?: string; dark?: string };
+
+type BrandMode = "icon-title" | "icon-only" | "logo";
+
+type BrandConfig =
+  | { mode: "icon-title"; name: string; icon?: BrandImage; logo?: never; href?: string }
+  | { mode: "icon-only"; name: string; icon: BrandImage; logo?: never; href?: string }
+  | { mode: "logo"; name: string; icon: BrandImage; logo: BrandImage; href?: string };
+
+type ThemeConfig = {
+  preset?: "trueforge" | "claude" | "chatgpt" | "gemini"; // default "trueforge"
+  mode?: "light" | "dark" | "system";
+  brand?: BrandConfig;
+  ...
+};
+```
+
+Set `brand.mode`, then pass the fields that mode requires. `name` always labels the mark.
+
+| Look | `mode` | Required | Expanded | Collapsed |
+| --- | --- | --- | --- | --- |
+| Default | omit `brand` | — | TrueForge wordmark | TrueForge square |
+| Icon + title | `"icon-title"` | `name` (+ optional `icon`) | square + title | square |
+| Icon only | `"icon-only"` | `name`, `icon` | square | square |
+| Wide logo | `"logo"` | `name`, `icon`, `logo` | wide logo | square |
+
+```tsx App.tsx
+<TrueForgeUI
+  ...
+  theme={{
+    preset: "trueforge",
+    mode: "system",
+    brand: {
+      mode: "logo",
+      name: "Acme",
+      icon: "/icon.svg",
+      logo: "/wordmark.svg",
+    }
+  }}
+/>
+```
+
+`icon` is the square asset used in collapsed and compact surfaces. `logo` is the wider
+asset used when `mode` is `"logo"` and requires `icon` as its compact fallback. When
+`brand` is omitted, expanded chrome uses the built-in TrueForge wordmark and compact
+surfaces use the built-in square mark.
+
+The `chatgpt`, `claude`, and `gemini` themes are shown below:
+
+<Columns cols={3}>
+  <Frame caption="chatgpt">
+    ![TrueForge UI with the chatgpt theme preset](/images/theme-chatgpt.png)
+  </Frame>
+
+  <Frame caption="claude">
+    ![TrueForge UI with the claude theme preset](/images/theme-claude.png)
+  </Frame>
+
+  <Frame caption="gemini">
+    ![TrueForge UI with the gemini theme preset](/images/theme-gemini.png)
+  </Frame>
+</Columns>
+
+## Light and dark mode
+
+If you omit this key, the SDK defaults to the system theme, and users can switch between light and dark mode through the UI.
+
+If you want the SDK theme to follow your application’s theme, set this value to light, dark, or system. This allows the SDK to stay in sync with the main application theme. When the theme is explicitly set, the user cannot change it through the UI.
+
+<Frame caption="Dark mode applied to the chat UI.">
+  ![The TrueForge UI SDK rendered in dark mode](/images/dark_theme.png)
+</Frame>
+
+### Separate logo for light and dark theme
+
+You can also provide separate logos for light and dark modes, allowing your branding to remain visible and optimized for each theme, as shown below:
+
+```tsx App.tsx
+<TrueForgeUI
+  ...
+  theme={{
+    ...
+    brand: {
+      mode: "logo",
+      name: "Acme",
+      icon: {
+        light: "/icon/light.svg",
+        dark: "/icon/dark.svg",
+      },
+      logo: {
+        light: "/wordmark/light.svg",
+        dark: "/wordmark/dark.svg",
+      },
+      href: "https://example.com",
+    }
+  }}
+/>
+```
+
+The icon and logo sources are selected based on the resolved theme mode. When mode is omitted, they automatically follow the system theme.
+
+* Provide both light and dark to use a different image for each mode.
+* Provide only one of light or dark to use the same image in both modes.
+* Use src for a mode-independent image.
+* Set `brand.mode` first (`icon-title` | `icon-only` | `logo`); `name` is required and always labels images.
+* Visible title text only appears for `mode: "icon-title"`.
+* Set the brand-level `href` to make configured images clickable.
+
+For more advanced use cases, such as rendering an inline SVG or an animated logo, override the BrandLogo slot instead of passing a React node through the theme object.
+
+```tsx App.tsx
+import logoUrl from "./logo.svg";
+
+function MyCustomLogo() {
+  return <img src={logoUrl} alt="My custom logo" />;
+}
+
+<TrueForgeUI
+  ...
+  overrides={{ BrandLogo: MyCustomLogo }}
+/>
+```

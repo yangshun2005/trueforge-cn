@@ -1,0 +1,32 @@
+{
+  "recordedAt": "2026-07-19",
+  "commands": {
+    "build": {
+      "command": "npm run build:ci",
+      "exitCode": 2,
+      "errors": [
+        {
+          "classification": "canonical-pre-existing",
+          "file": "src/routers/inference.ts",
+          "line": 216,
+          "message": "Object literal may only specify known properties, and 'enableMetrics' does not exist in type 'AuthCacheConfig'."
+        }
+      ]
+    },
+    "lint": {
+      "command": "npm run lint:ci",
+      "exitCode": 0,
+      "errors": []
+    }
+  },
+  "publicTry1Diagnostics": {
+    "buildErrors": 0,
+    "lintErrors": 0,
+    "note": "public-try-1 is compiled via tsconfig src/**/* but produces no distinct build/lint diagnostics beyond canonical sources at baseline time."
+  },
+  "notes": [
+    "Baseline recorded before public harness extraction.",
+    "Do not fix canonical-pre-existing inference.ts error during extraction unless required for unrelated reasons.",
+    "Re-run the same commands at verify-build-lint and classify any new diagnostics."
+  ]
+}

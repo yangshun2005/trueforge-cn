@@ -1,0 +1,52 @@
+---
+title: 'Setup Models'
+sidebarTitle: 'Models'
+description: 'Connect model providers from the shipped catalog or add a custom OpenAI-compatible endpoint.'
+---
+
+TrueForge works with the major model providers and any OpenAI-compatible endpoint. Configure credentials once under **Settings → Models**. Agents reference models by name — agent definitions never contain API keys.
+
+## Supported providers
+
+| Provider type   | Notes                                                                  |
+| --------------- | ---------------------------------------------------------------------- |
+| `openai`        | OpenAI                                                                 |
+| `anthropic`     | Anthropic                                                              |
+| `google-gemini` | Google Gemini                                                          |
+| `fireworks`     | Fireworks AI                                                           |
+| `together`      | Together AI                                                            |
+| `moonshot`      | Moonshot AI (Kimi)                                                     |
+| `zai`           | Z.ai (GLM)                                                             |
+| `alibaba`       | Alibaba (Qwen)                                                         |
+| `custom`        | Any OpenAI-compatible endpoint — self-hosted models, gateways, proxies |
+
+## Configuring a standard provider
+
+Open **Settings → Models**, pick a provider, and paste your API key. Models from that provider become available immediately in the agent model selector.
+
+<div style={{ position: "relative", boxSizing: "content-box", width: "100%", aspectRatio: "1.75", padding: "40px 0" }}>
+  <iframe
+    src="https://app.supademo.com/embed/cmsk7202v01l51t0jkq022fjk?embed_v=2&utm_source=embed"
+    loading="lazy"
+    title="Configure a model provider in TrueForge"
+    allow="clipboard-write"
+    allowFullScreen
+    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
+  />
+</div>
+
+The provider list comes from the shipped model catalog — see [Initial Setup](/harness/initial-setup#what-is-supported-out-of-the-box) for how catalogs work and how to change what the UI offers.
+
+## Adding a custom provider
+
+Use the `custom` provider type for vLLM, Ollama, a corporate gateway, or any other OpenAI-compatible API. Custom providers are not in the catalog — you add them yourself with a base URL, API key, and the model IDs you want exposed.
+
+<Frame caption="The Add custom provider dialog — connect any OpenAI-compatible endpoint with a base URL, an optional API key, and one or more models (each with its context length and max output tokens).">
+  <img src="/images/add-custom-model-provider.png" alt="The Add custom provider dialog filled for a Groq endpoint — name, base URL, an optional API key, a model with its ID and name, and Advanced context length and max output tokens" />
+</Frame>
+
+<Note>
+  **Planned:** automatic model selection for different turns or subagents. Today each agent uses the model you
+  configure. In the future, TrueForge will be able to pick among a set of models per turn or subagent based on task
+  complexity, latency, and cost.
+</Note>

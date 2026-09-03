@@ -1,0 +1,66 @@
+---
+title: 'Setup Skills'
+sidebarTitle: 'Skills'
+description: 'Register git-backed SKILL.md instruction packs from the shipped catalog or your own repository.'
+---
+
+Skills teach an agent how to perform specialized tasks — querying a database, triaging an alert, following an escalation playbook, or drafting release notes.
+
+A skill is a **directory in a git repository** rooted at a `SKILL.md` file. Register skills once under **Settings → Skills**, then attach them by name when you [create an agent](/create-agent/overview).
+
+## Registering a skill
+
+Open **Settings → Skills**, pick a starter skill from the catalog, or add your own GitHub/GitLab repository (URL, optional path, and ref). Pin a tag or commit SHA for production stability.
+
+<div style={{ position: "relative", boxSizing: "content-box", width: "100%", aspectRatio: "1.75", padding: "40px 0" }}>
+  <iframe
+    src="https://app.supademo.com/embed/cmsk7of5d00eezq0jjcap0qxp?embed_v=2&utm_source=embed"
+    loading="lazy"
+    title="Register a skill in TrueForge"
+    allow="clipboard-write"
+    allowFullScreen
+    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
+  />
+</div>
+
+The starter skills in the catalog come from the shipped skill catalog — see [Initial Setup](/harness/initial-setup#what-is-supported-out-of-the-box) for how catalogs work and how to change what the UI offers.
+
+## What a skill contains
+
+```text
+customer-support-skill/
+├── SKILL.md
+├── references/
+│   └── escalation-policy.md
+└── scripts/
+    └── classify_ticket.py
+```
+
+`SKILL.md` has YAML frontmatter (`name`, `description`) and a markdown body of instructions. The `description` is what the agent sees upfront; the full body and supporting files load only when the agent picks the skill (**progressive disclosure**).
+
+## Runtime requirements
+
+<Note>
+  Skills require the agent's [sandbox](/sandbox) to be enabled. The skill repository is cloned into the sandbox, and the
+  agent reads `SKILL.md` (and can run bundled scripts) there. Two skills cannot share the same name on one agent.
+</Note>
+
+At runtime:
+
+1. The harness exposes each attached skill's name and description.
+2. When the model decides a skill is relevant, the repo is materialized under `/opt/tfy/skills/{name}`.
+3. The agent follows `SKILL.md` and uses supporting files as needed.
+
+## Skills + MCP tools
+
+- **Skills** define _how_ to handle a task (procedure, decision logic, formatting).
+- **MCP tools** provide the _actions and data_ to execute it.
+
+Example: a CRM follow-up skill sets tone and escalation rules; MCP tools look up the record, update the ticket, and notify Slack.
+
+## Authoring tips
+
+- Keep the `description` sharp — it is the only thing the model sees before loading the skill.
+- Write `SKILL.md` like instructions to a competent teammate.
+- Put heavy reference material in supporting files the skill links to.
+- Prefer several focused skills over one sprawling pack.

@@ -1,0 +1,1 @@
+- 对支持持久化 JSON 的 Zod 模式（例如 `model_provider.manifest`）所做的破坏性更改，必须包含数据迁移或对现有行的重写。
