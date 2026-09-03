@@ -3,9 +3,9 @@
 > **[中文化] trueforge**
 >
 > 此项目是 [truefoundry/trueforge](https://github.com/truefoundry/trueforge) 的中文翻译版本。
-> - 原项目 Stars: 0
-> - 主语言: 
-> - 许可证: 
+> - 原项目 Stars: 5072
+> - 主语言: TypeScript
+> - 许可证: MIT
 > - 翻译日期: 2026-09-03
 > - 原始 README: [README_en.md](README_en.md)
 >
